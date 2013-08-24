@@ -3,7 +3,9 @@ AC_INIT([libgfapi-java-io],[0.1],[gluster-devel@nongu.org])
 
 AM_INIT_AUTOMAKE
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile
+		src/Makefile
+		java/Makefile])
 
 AC_PROG_CC
 AC_PROG_LIBTOOL
