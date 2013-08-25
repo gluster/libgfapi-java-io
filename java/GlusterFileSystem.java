@@ -2,7 +2,7 @@ package glusterfsio;
 
 public class GlusterFileSystem {
     static {
-	System.loadLibrary("gfapi-java");
+	System.loadLibrary("gfapi-java-io");
     }
 
     private String volname = null;
