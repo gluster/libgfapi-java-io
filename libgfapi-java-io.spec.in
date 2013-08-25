@@ -7,6 +7,8 @@ Group: System Environment/Base
 URL: https://github.com/avati/libgfapi-java-io
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+Requires: glusterfs-api
+BuildRequires: glusterfs-api-devel
 
 %description
 This package provides Java bindings for libgfapi. The Java API
