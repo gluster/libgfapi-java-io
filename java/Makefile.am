@@ -30,7 +30,7 @@ glusterfsio/GlusterFileInputStream.class: glusterfsio/GlusterFile.class
 glusterfsio/GlusterFileOutputStream.class: glusterfsio/GlusterFile.class
 
 glusterfsio.jar: glusterfsio/glfs_java.class glusterfsio/glfs_javaJNI.class glusterfsio/GlusterFileSystem.class glusterfsio/GlusterFile.class glusterfsio/GlusterFileInputStream.class glusterfsio/GlusterFileOutputStream.class
-	jar -cf $@ glusterfsio;
+	jar -cf $@ glusterfsio/*.class;
 
 CLEANFILES = glfs_java.java glfs_javaJNI.java *.class glusterfsio.jar
 
