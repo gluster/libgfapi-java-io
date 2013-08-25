@@ -9,8 +9,18 @@ public class glfsxmp {
 
 	fs.setLogging("/dev/stdout", 7);
 
-	GlusterFile filein = new GlusterFile (fs, "/subdir/file-input");
-	GlusterFile fileout = new GlusterFile (fs, "/subdir/file-output");
+	GlusterFile subdir = new GlusterFile (fs, "subdir");
+
+	GlusterFile filein = new GlusterFile (fs, "file-input");
+
+	GlusterFile fileout = new GlusterFile (subdir, "file-output");
+
+	GlusterFile subdirs = new GlusterFile (fs, "subdir1/subdir2/subdir3/subdir4");
+
+	subdir.mkdir();
+
+	filein.createNewFile();
+	fileout.createNewFile();
 
 	GlusterFileInputStream fdin = new GlusterFileInputStream (filein);
 
@@ -20,7 +30,12 @@ public class glfsxmp {
 	System.out.printf("read ret=%d, data=%s\n", ret, new String(data));
 
 	GlusterFileOutputStream fdout = new GlusterFileOutputStream (fileout);
-	fdout.write (data);
-	Thread.sleep (1000);
+	fdout.write (data, ret);
+	fdin.close();
+	fdout.close ();
+
+	fileout.delete();
+	subdir.delete();
+	subdirs.mkdirs();
     }
 }
