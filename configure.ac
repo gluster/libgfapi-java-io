@@ -19,7 +19,8 @@ fi
 
 AC_CONFIG_FILES([Makefile
 		src/Makefile
-		java/Makefile])
+		java/Makefile
+		libgfapi-java-io.spec])
 
 AC_PROG_CC
 AC_PROG_LIBTOOL

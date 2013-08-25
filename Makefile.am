@@ -1,3 +1,3 @@
 SUBDIRS = src java
 
-EXTRA_DIST = example/glfsxmp.java
+EXTRA_DIST = examples/glfsxmp.java libgfapi-java-io.spec LICENSE
