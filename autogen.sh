@@ -1,6 +1,6 @@
 #!/bin/sh
 
 aclocal
-libtoolize
+libtoolize --automake --copy --force
 autoconf
-automake --add-missing --foreign
+automake --add-missing --copy --foreign
