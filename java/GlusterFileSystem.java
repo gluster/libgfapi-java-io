@@ -57,16 +57,4 @@ public class GlusterFileSystem {
 	ret = glfs_javaJNI.glfs_set_logging(fs, LogFile, LogLevel);
 	return ret;
     }
-
-    public int setVolFile(String VolFile) {
-	int ret;
-	ret = glfs_javaJNI.glfs_set_volfile(fs, VolFile);
-	return ret;
-    }
-
-    public int setVolFileServer(String Transport, String Host, int Port) {
-	int ret;
-	ret = glfs_javaJNI.glfs_set_volfile_server(fs, Transport, Host, Port);
-	return ret;
-    }
 }
