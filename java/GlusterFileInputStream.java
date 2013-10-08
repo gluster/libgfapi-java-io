@@ -16,6 +16,10 @@ public class GlusterFileInputStream extends InputStream {
 	return glfs_javaJNI.glfs_java_read(fd, buf, size);
     }
 
+    public int read(byte [] buf) {
+	return glfs_javaJNI.glfs_java_read(fd, buf, buf.length);
+    }
+
     public int pread(byte [] buf, int size, int offset) {
 	return glfs_javaJNI.glfs_java_pread(fd, buf, size, offset);
     }

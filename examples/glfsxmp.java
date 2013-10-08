@@ -27,12 +27,20 @@ public class glfsxmp {
 	byte[] data = new byte[1024];
 
 	int ret = fdin.read (data, 1024);
+	fdin.close();
+
 	System.out.printf("read ret=%d, data=%s\n", ret, new String(data));
 
-	GlusterFileOutputStream fdout = new GlusterFileOutputStream (fileout);
-	fdout.write (data, ret);
-	fdin.close();
-	fdout.close ();
+	int i;
+
+	for (i = 0; i < 1000; i++) {
+	    fileout = new GlusterFile (fs, String.format("filename%d", i));
+	    fileout.createNewFile();
+	    GlusterFileOutputStream fdout = new GlusterFileOutputStream (fileout);
+	    fdout.write (data, ret);
+	    fdout.close ();
+	}
+
 
 	fileout.delete();
 	subdir.delete();
