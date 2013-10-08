@@ -1,5 +1,5 @@
 
-AC_INIT([libgfapi-java-io],[0.1],[gluster-devel@nongu.org])
+AC_INIT([libgfapi-java-io],[0.2],[gluster-devel@nongu.org])
 
 AM_INIT_AUTOMAKE
 
