@@ -13,8 +13,79 @@
 			<version>4.4</version>
 		</dependency>
 	</dependencies>
+	
+	<repositories>  
+     <repository>  
+       <id>maven-s3-release-repo</id>  
+       <name>S3 Release Repository</name>  
+       <url>s3://snuffy/release</url>  
+       <releases>  
+         <enabled>true</enabled>  
+       </releases>  
+       <snapshots>  
+         <enabled>false</enabled>  
+       </snapshots>  
+     </repository>  
+     <repository>  
+       <id>maven-s3-snapshot-repo</id>  
+       <name>S3 Snapshot Repository</name>  
+       <url>s3://snuffy/snapshot</url>  
+       <releases>  
+         <enabled>false</enabled>  
+       </releases>  
+       <snapshots>  
+         <enabled>true</enabled>  
+       </snapshots>  
+     </repository>  
+   </repositories>  
+   <pluginRepositories>  
+     <pluginRepository>  
+       <id>maven-s3-release-repo</id>  
+       <name>S3 Release Repository</name>  
+       <url>s3://snuffy/release</url>  
+       <releases>  
+         <enabled>true</enabled>  
+       </releases>  
+       <snapshots>  
+         <enabled>false</enabled>  
+       </snapshots>  
+     </pluginRepository>  
+     <pluginRepository>  
+       <id>maven-s3-snapshot-repo</id>  
+       <name>S3 Snapshot Repository</name>  
+       <url>s3://snuffy/snapshot</url>  
+       <releases>  
+         <enabled>false</enabled>  
+       </releases>  
+       <snapshots>  
+         <enabled>true</enabled>  
+       </snapshots>  
+     </pluginRepository>  
+   </pluginRepositories>  
+
+   <distributionManagement>  
+     <repository>  
+       <id>maven-s3-release-repo</id>  
+       <name>S3 Release Repository</name>  
+       <url>s3://snuffy/release</url>  
+     </repository>  
+     <snapshotRepository>  
+       <id>maven-s3-snapshot-repo</id>  
+       <name>S3 Snapshot Repository</name>  
+       <url>s3://snuffy/snapshot</url>  
+     </snapshotRepository>  
+   </distributionManagement> 
+   
 	<build>
+    	<extensions>  
+       <extension>  
+         <groupId>org.springframework.build.aws</groupId>  
+         <artifactId>org.springframework.build.aws.maven</artifactId>  
+         <version>3.0.0.RELEASE</version>  
+       </extension>  
+        </extensions>  
     	<plugins>
+    	
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>

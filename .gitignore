@@ -26,3 +26,7 @@ src/glfs_java.i
 src/glfs_java_wrap.c
 src/main/java/org/gluster/io
 target/
+.classpath
+.project
+.settings/
+
