@@ -20,6 +20,8 @@ if [ $mod = glfs_java ]; then
 
 /* This allows a C function to return a char ** as a Java String array */
 %typemap(out) char** {
+    if(!result) return NULL;
+    
     int i;
 
     int len=-1;
@@ -35,7 +37,10 @@ if [ $mod = glfs_java ]; then
       temp_string = (*jenv)->NewStringUTF(jenv, result[i]);
       (*jenv)->SetObjectArrayElement(jenv, jresult, i, temp_string);
       (*jenv)->DeleteLocalRef(jenv, temp_string);
+      free(result[i]);
     }
+
+   free(result);
 }
 
 /* These 3 typemaps tell SWIG what JNI and Java types to use */
