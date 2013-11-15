@@ -14,6 +14,8 @@
 
 #include <stdbool.h>
 #include <api/glfs.h>
+#include <stdlib.h>
+#include <string.h>
 
 
 glfs_t *glfs_new (const char *volname);
@@ -33,6 +35,7 @@ bool glfs_java_file_createNewFile (glfs_t *fs, const char *path);
 bool glfs_java_file_mkdir (glfs_t *fs, const char *path);
 bool glfs_java_file_isDirectory (glfs_t *fs, const char *path);
 bool glfs_java_file_isFile (glfs_t *fs, const char *path);
+char** glfs_java_list_dir (glfs_t *fs, const char *path);
 
 glfs_fd_t *glfs_java_open_read (glfs_t *fs, const char *filename);
 glfs_fd_t *glfs_java_open_write (glfs_t *fs, const char *filename);
