@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.util.ArrayList;
 
-import org.gluster.io.glfs_javaJNI;
+import glusterfsio.glfs_javaJNI;
 
 
 public class GlusterFile {
@@ -21,15 +21,16 @@ public class GlusterFile {
 		this.path = path;
 	}
 
-	protected GlusterFile(GlusterFile parent, String path) {
+	public GlusterFile(GlusterFile parent, String path) {
 		handle = parent.handle;
+		this.path = parent.getPath() + GlusterClient.PATH_SEPARATOR + path;
 	}
 
 	/*
 	 * convenience method to return any file on the same file system given its
 	 * path
 	 */
-	public GlusterFile newInstance(String path) {
+	public GlusterFile open(String path) {
 		return new GlusterFile(path, this.handle);
 
 	}
@@ -88,7 +89,7 @@ public class GlusterFile {
 		for (i = 0; i < pieces.length; i++) {
 			p = p.concat(String.valueOf(GlusterClient.PATH_SEPARATOR)).concat(
 					pieces[i]);
-			f = newInstance(p);
+			f = open(p);
 			if (!f.exists()) {
 				if (!f.mkdir())
 					return false;
@@ -115,7 +116,7 @@ public class GlusterFile {
 		int n = ss.length;
 		GlusterFile[] fs = new GlusterFile[n];
 		for (int i = 0; i < n; i++) {
-			fs[i] = newInstance(ss[i]);
+			fs[i] = open(ss[i]);
 		}
 		return fs;
 	}
@@ -126,7 +127,7 @@ public class GlusterFile {
         ArrayList<GlusterFile> files = new ArrayList<GlusterFile>();
         for (String s : ss)
             if ((filter == null) || filter.accept(new File(s),s))
-                files.add(newInstance(s));
+                files.add(open(s));
         return files.toArray(new GlusterFile[files.size()]);
     }
 	

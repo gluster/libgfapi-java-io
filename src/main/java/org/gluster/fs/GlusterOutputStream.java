@@ -3,7 +3,7 @@ package org.gluster.fs;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.gluster.io.glfs_javaJNI;
+import glusterfsio.glfs_javaJNI;
 
 public class GlusterOutputStream extends OutputStream{
 	    private long fd;

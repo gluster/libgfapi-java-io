@@ -1,6 +1,6 @@
 package org.gluster.fs;
 
-import org.gluster.io.glfs_javaJNI;
+import glusterfsio.glfs_javaJNI;
 
 public class GlusterVolume{
 	
@@ -26,4 +26,5 @@ public class GlusterVolume{
 	public String getName() {
 		return this.name;
 	}
+	
 }
