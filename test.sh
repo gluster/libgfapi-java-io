@@ -4,6 +4,6 @@
 # this could be conditionally set.  it may be set higher up as part of the global env variables.
 #
 rm -rf target/
-export GLUSTER_JAVA_LIB=`pwd`/src/main/resources/libgfapi.so
+export GLUSTER_JAVA_LIB=`pwd`/src/main/resources/libgfapi-java-io.so
 mvn package -Dmaven.surefire.debug 
 # mvn package

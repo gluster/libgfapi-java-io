@@ -26,11 +26,11 @@ public class TestLibgfapiJava {
 	  
 	  @After
 	  public void tearDown() throws Exception {
-		 getTestBase().delete();
+		 getTestBase().delete(true);
 	  }
 
 	  
 	  public GlusterFile getTestBase(){
-		  return vol.open("/test");
+		  return vol.open("/test/");
 	  }
 }

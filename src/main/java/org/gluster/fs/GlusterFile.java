@@ -18,12 +18,17 @@ public class GlusterFile {
 
 	protected GlusterFile(String path, long handle) {
 		this.handle = handle;
-		this.path = path;
+		/* all paths should not have trailing slash.  tolerate + strip it off */
+		
+		if(path.charAt(path.length()-1)==GlusterClient.PATH_SEPARATOR){
+			this.path = path.substring(0,path.length()-1);
+		}else{
+			this.path = path;
+		}
 	}
 
 	public GlusterFile(GlusterFile parent, String path) {
-		handle = parent.handle;
-		this.path = parent.getPath() + GlusterClient.PATH_SEPARATOR + path;
+		this( parent.getPath() + GlusterClient.PATH_SEPARATOR + path,parent.handle);
 	}
 
 	/*
@@ -132,7 +137,13 @@ public class GlusterFile {
     }
 	
 	public String[] list() {
-		String list[] = glfs_javaJNI.glfs_java_list_dir(handle, this.path);
+		
+		if(isFile()) return null;
+		
+		String list[] = glfs_javaJNI.glfs_java_list_dir(handle, this.path + GlusterClient.PATH_SEPARATOR);
+		/* API returns null for no elements */
+		if(list==null)
+			list = new String[0];
 		
 		for(int i=0;i<list.length;i++){
 			list[i] = getName(list[i]);
@@ -153,6 +164,16 @@ public class GlusterFile {
         }
         return (String[])(v.toArray(new String[v.size()]));
     }
+	
+	public boolean delete(boolean recursive) throws IOException{
+	    	if(isDirectory() && recursive){
+		    	String files[] = list();
+		        for (String temp : files) {
+		        	new GlusterFile(this,temp).delete(recursive);
+		        }
+		    }
+	    	return delete();
+	}
 	
 	public String toString() {
 		return path;
