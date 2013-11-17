@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+char* glfs_java_getxattr(glfs_t *glfs, const char *path, const char *name);
 
 glfs_t *glfs_new (const char *volname);
 int glfs_init (glfs_t *fs);

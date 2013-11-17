@@ -7,7 +7,15 @@ import org.junit.Test;
 
 public class TestBasicIo extends TestLibgfapiJava{
 
-
+	@Test
+	public void testXAttr(){
+		GlusterFile base = getTestBase();
+		GlusterFile out = new GlusterFile(base,"a");
+		out.createNewFile();
+		String xattrOUt = out.getXAttr("trusted.glusterfs.pathinfo");
+		assert(xattrOUt!=null && "".compareTo(xattrOUt)>0 );
+		//System.out.println("Xattr Value  : " + xattrOUt);
+	}
 	
 	@Test
 	public void testDirList(){

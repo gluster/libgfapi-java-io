@@ -10,6 +10,15 @@
 
 #include "glfs-java.h"
 
+char* glfs_java_getxattr(glfs_t *glfs, const char *path, const char *name)
+{
+	int size = 1024;
+	char* buf = malloc(size * sizeof(char));
+	
+	glfs_lgetxattr (glfs, path, name, buf, size);
+	
+	return buf;
+}
 
 long
 glfs_java_file_length (glfs_t *glfs, const char *path)

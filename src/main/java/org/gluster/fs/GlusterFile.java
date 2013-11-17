@@ -179,6 +179,11 @@ public class GlusterFile {
 		return path;
 	}
 	
+	
+	public String getXAttr(String attr) {
+		return  glfs_javaJNI.glfs_java_getxattr(handle, path, attr);
+	}
+	
 	public boolean renameTo(String dstpath) {
 		return glfs_javaJNI.glfs_java_file_renameTo(handle, path, dstpath);
 	}
