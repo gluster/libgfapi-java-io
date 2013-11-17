@@ -10,6 +10,105 @@
 
 #include "glfs-java.h"
 
+int glfs_java_chown(glfs_t *glfs, const char *path, unsigned int uid, unsigned int gid){
+	return  glfs_chown (glfs, path,  uid, gid);
+}
+
+int glfs_java_chmod(glfs_t *glfs, const char *path, unsigned long mode){
+	return  glfs_chmod (glfs, path,  mode);
+
+}
+
+unsigned long glfs_java_getmod(glfs_t *glfs, const char *path){
+	
+	struct stat buf;
+	long ret;
+
+	ret = glfs_lstat (glfs, path, &buf);
+
+	if (ret < 0)
+		return -1;
+
+	return buf.st_mode;
+}
+
+unsigned int glfs_java_getuid(glfs_t *glfs, const char *path){
+	
+	struct stat buf;
+	long ret;
+
+	ret = glfs_lstat (glfs, path, &buf);
+
+	if (ret < 0)
+		return -1;
+
+	return buf.st_uid;
+}
+
+unsigned int glfs_java_getgid(glfs_t *glfs, const char *path){
+	
+	struct stat buf;
+	long ret;
+
+	ret = glfs_lstat (glfs, path, &buf);
+
+	if (ret < 0)
+		return -1;
+
+	return buf.st_gid;
+}
+
+int glfs_java_getblocksize(glfs_t *glfs, const char *path){
+	
+	struct stat buf;
+	long ret;
+
+	ret = glfs_lstat (glfs, path, &buf);
+
+	if (ret < 0)
+		return -1;
+
+	return buf.st_blksize;
+}
+
+long glfs_java_getmtime(glfs_t *glfs, const char *path){
+	
+	struct stat buf;
+	long ret;
+
+	ret = glfs_lstat (glfs, path, &buf);
+
+	if (ret < 0)
+		return -1;
+
+	return buf.st_mtime;
+}
+
+long glfs_java_getctime(glfs_t *glfs, const char *path){
+	
+	struct stat buf;
+	long ret;
+
+	ret = glfs_lstat (glfs, path, &buf);
+
+	if (ret < 0)
+		return -1;
+
+	return buf.st_ctime;
+}
+
+long glfs_java_getatime(glfs_t *glfs, const char *path){
+	
+	struct stat buf;
+	long ret;
+
+	ret = glfs_lstat (glfs, path, &buf);
+
+	if (ret < 0)
+		return -1;
+
+	return buf.st_atime;
+}
 char* glfs_java_getxattr(glfs_t *glfs, const char *path, const char *name)
 {
 	int size = 1024;

@@ -13,8 +13,27 @@ public class TestBasicIo extends TestLibgfapiJava{
 		GlusterFile out = new GlusterFile(base,"a");
 		out.createNewFile();
 		String xattrOUt = out.getXAttr("trusted.glusterfs.pathinfo");
-		assert(xattrOUt!=null && "".compareTo(xattrOUt)>0 );
+		assert(xattrOUt!=null && "".compareTo(xattrOUt)!=0 );
 		//System.out.println("Xattr Value  : " + xattrOUt);
+	}
+	
+	@Test
+	public void testMode(){
+		GlusterFile base = getTestBase();
+		GlusterFile out = new GlusterFile(base,"a");
+		out.createNewFile();
+	
+		int mode = 0100700;
+		out.chmod(mode);
+		assertTrue(mode==out.getMod());
+		
+		mode = 0100750;
+		out.chmod(mode);
+		assertTrue(mode==out.getMod());
+		
+		mode = 0100750;
+		out.chmod(mode);
+		System.out.println("new mode" + Long.toString(out.getMod(),8));
 	}
 	
 	@Test

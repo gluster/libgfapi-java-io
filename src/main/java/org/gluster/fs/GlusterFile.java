@@ -184,6 +184,34 @@ public class GlusterFile {
 		return  glfs_javaJNI.glfs_java_getxattr(handle, path, attr);
 	}
 	
+	public boolean chmod(int mode) {
+		return  glfs_javaJNI.glfs_java_chmod(handle,path,mode)==0;
+	}
+	
+	public long getMod() {
+		return  glfs_javaJNI.glfs_java_getmod(handle,path);
+	}
+	
+	public long getUid() {
+		return  glfs_javaJNI.glfs_java_getuid(handle,path);
+	}
+
+	public long getGid() {
+		return  glfs_javaJNI.glfs_java_getgid(handle,path);
+	}
+
+	public long getAtime() {
+		return  glfs_javaJNI.glfs_java_getatime(handle,path);
+	}
+
+	public long getCtime() {
+		return  glfs_javaJNI.glfs_java_getctime(handle,path);
+	}
+	
+	public int getBlockSize() {
+		return  glfs_javaJNI.glfs_java_getblocksize(handle,path);
+	}
+	
 	public boolean renameTo(String dstpath) {
 		return glfs_javaJNI.glfs_java_file_renameTo(handle, path, dstpath);
 	}
