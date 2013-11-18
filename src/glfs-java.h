@@ -51,6 +51,7 @@ char** glfs_java_list_dir (glfs_t *fs, const char *path);
 glfs_fd_t *glfs_java_open_read (glfs_t *fs, const char *filename);
 glfs_fd_t *glfs_java_open_write (glfs_t *fs, const char *filename);
 
+long glfs_java_seek (glfs_fd_t *glfd, int location);
 long glfs_java_read (glfs_fd_t *fd, void *io_data, size_t size);
 long glfs_java_pread (glfs_fd_t *fd, void *io_data, size_t size, off_t offset);
 long glfs_java_write (glfs_fd_t *fd, void *io_data, size_t size);

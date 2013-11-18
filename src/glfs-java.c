@@ -168,6 +168,12 @@ glfs_java_file_isFile (glfs_t *glfs, const char *path)
 
 
 long
+glfs_java_seek (glfs_fd_t *glfd, int location)
+{
+	return glfs_lseek (glfd, location, SEEK_SET);
+}
+
+long
 glfs_java_read (glfs_fd_t *glfd, void *io_data, size_t size)
 {
 	return glfs_read (glfd, io_data, size, 0);
