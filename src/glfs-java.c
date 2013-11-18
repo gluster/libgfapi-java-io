@@ -155,3 +155,32 @@ glfs_java_file_renameTo (glfs_t *glfs, const char *src, const char *dst)
 {
 	return glfs_rename (glfs, src, dst);
 }
+
+char**
+glfs_java_list_dir (glfs_t *fs, const char *path)
+{
+        char** listing = NULL;
+        unsigned int size = 0;
+        glfs_fd_t *fd = NULL;
+        char buf[512];
+        struct dirent *entry = NULL;
+
+        fd = glfs_opendir (fs, path);
+        if (!fd) {
+            return listing;
+        }
+
+        while (glfs_readdir_r (fd, (struct dirent *)buf, &entry), entry) {
+         /* skip over . and .. entries */
+	 if(strcmp(entry->d_name,".")==0 || strcmp(entry->d_name,"..")==0) continue;
+
+         // one extra for a NULL
+	 listing=realloc(listing, sizeof(char *) * (++size+1));
+         listing[size-1]= (char*) malloc((strlen(entry->d_name) + 1) * sizeof(char));
+         strcpy (listing[size-1], entry->d_name);
+         listing[size] = (char*)NULL;
+        }
+
+        glfs_closedir (fd);
+        return listing;
+}

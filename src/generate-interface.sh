@@ -17,6 +17,42 @@ EOF
 
 if [ $mod = glfs_java ]; then
     cat >> $out <<EOF
+
+/* This allows a C function to return a char ** as a Java String array */
+%typemap(out) char** {
+    if(!result) return NULL;
+    
+    int i;
+
+    int len=-1;
+    while(result[++len] !=NULL);
+   
+    jstring temp_string;
+    const jclass clazz = (*jenv)->FindClass(jenv, "java/lang/String");
+
+    jresult = (*jenv)->NewObjectArray(jenv, len, clazz, NULL);
+    /* exception checking omitted */
+
+    for (i=0; i<len; i++) {
+      temp_string = (*jenv)->NewStringUTF(jenv, result[i]);
+      (*jenv)->SetObjectArrayElement(jenv, jresult, i, temp_string);
+      (*jenv)->DeleteLocalRef(jenv, temp_string);
+      free(result[i]);
+    }
+
+   free(result);
+}
+
+/* These 3 typemaps tell SWIG what JNI and Java types to use */
+%typemap(jni) char** "jobjectArray"
+%typemap(jtype) char** "String[]"
+%typemap(jstype) char** "String[]"
+
+/* These 2 typemaps handle the conversion of the jtype to jstype typemap type and vice versa */
+%typemap(javain) char** "$javainput"
+%typemap(javaout) char** {
+    return \$jnicall;
+}
 %typemap(jni) signed char[ANY], signed char[] %{ jbyteArray %}
 %typemap(jtype) signed char[ANY], signed char[] %{ byte[] %}
 %typemap(jstype) signed char[ANY], signed char[] %{ byte[] %}
