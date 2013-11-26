@@ -8,7 +8,7 @@ public class GlusterFileSystem {
     private String volname = null;
     private long fs;
 
-    private void init(String VolumeName, String Server, int Port, String Transport) throws InstantiationException {
+    private void init(String VolumeName, String Server, int Port, String Transport, String LogFile, int LogLevel) throws InstantiationException {
 	int ret;
 
 	fs = glfs_javaJNI.glfs_new(VolumeName);
@@ -23,6 +23,12 @@ public class GlusterFileSystem {
 	    throw new InstantiationException();
 	}
 
+	ret = glfs_javaJNI.glfs_set_logging(fs, LogFile, LogLevel);
+	if (ret == -1) {
+	    glfs_javaJNI.glfs_fini(fs);
+	    throw new InstantiationException();
+	}
+
 	ret = glfs_javaJNI.glfs_init(fs);
 	if (ret == -1) {
 	    glfs_javaJNI.glfs_fini(fs);
@@ -32,16 +38,24 @@ public class GlusterFileSystem {
 	volname = VolumeName;
     }
 
-    public GlusterFileSystem(String VolumeName) throws InstantiationException{
-	init(VolumeName, "localhost", 0, "tcp");
+    public GlusterFileSystem(String VolumeName) throws InstantiationException {
+	init(VolumeName, "localhost", 0, "tcp", null, 0);
     }
 
     public GlusterFileSystem(String VolumeName, String Server) throws InstantiationException {
-	init(VolumeName, Server, 0, "tcp");
+	init(VolumeName, Server, 0, "tcp", null, 0);
+    }
+
+    public GlusterFileSystem(String VolumeName, String Server, String LogFile, int LogLevel) throws InstantiationException {
+	init(VolumeName, Server, 0, "tcp", LogFile, LogLevel);
     }
 
     public GlusterFileSystem(String VolumeName, String Server, int Port, String Transport) throws InstantiationException {
-	init(VolumeName, Server, Port, Transport);
+	init(VolumeName, Server, Port, Transport, null, 0);
+    }
+
+    public GlusterFileSystem(String VolumeName, String Server, int Port, String Transport, String LogFile, int LogLevel) throws InstantiationException {
+	init(VolumeName, Server, Port, Transport, LogFile, LogLevel);
     }
 
     public long internal_handle() {
