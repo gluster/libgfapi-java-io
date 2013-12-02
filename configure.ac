@@ -1,21 +1,21 @@
 
-AC_INIT([libgfapi-java-io],[0.1],[gluster-devel@nongu.org])
+AC_INIT([libgfapi-java-io],[0.3],[gluster-devel@nongu.org])
 
 AM_INIT_AUTOMAKE
 
-m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES(yes)])
+#m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES(yes)])
 
-if make --help 2>&1 | grep -q no-print-directory; then
-   AM_MAKEFLAGS="$AM_MAKEFLAGS --no-print-directory";
-fi
+#if make --help 2>&1 | grep -q no-print-directory; then
+#   AM_MAKEFLAGS="$AM_MAKEFLAGS --no-print-directory";
+#fi
 
-if make --help 2>&1 | grep -q quiet; then
-   AM_MAKEFLAGS="$AM_MAKEFLAGS --quiet"
-fi
+#if make --help 2>&1 | grep -q quiet; then
+#   AM_MAKEFLAGS="$AM_MAKEFLAGS --quiet"
+#fi
 
-if libtool --help 2>&1 | grep -q quiet; then
-   AM_LIBTOOLFLAGS="--quiet";
-fi
+#if libtool --help 2>&1 | grep -q quiet; then
+#   AM_LIBTOOLFLAGS="--quiet";
+#fi
 
 AC_CONFIG_FILES([Makefile
 		src/Makefile
