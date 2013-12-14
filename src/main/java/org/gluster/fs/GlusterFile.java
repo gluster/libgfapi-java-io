@@ -116,11 +116,11 @@ public class GlusterFile {
 		return (f != null && f.isDirectory());
 	}
 
-	public OutputStream outputStream() throws IOException {
+	public GlusterOutputStream outputStream() throws IOException {
 		return new GlusterOutputStream(this.path, this.handle);
 	}
 
-	public InputStream inputStream() throws IOException {
+	public GlusterInputStream inputStream() throws IOException {
 		return new GlusterInputStream(this.path, this.handle);
 	}
 
@@ -212,6 +212,10 @@ public class GlusterFile {
 
 	public long getAtime() {
 		return  glfs_javaJNI.glfs_java_getatime(handle,path);
+	}
+	
+	public long getMtime() {
+		return  glfs_javaJNI.glfs_java_getmtime(handle,path);
 	}
 
 	public long getCtime() {

@@ -168,9 +168,21 @@ glfs_java_file_isFile (glfs_t *glfs, const char *path)
 
 
 long
-glfs_java_seek (glfs_fd_t *glfd, int location)
+glfs_java_seek_set (glfs_fd_t *glfd, long location)
 {
 	return glfs_lseek (glfd, location, SEEK_SET);
+}
+
+long
+glfs_java_seek_current (glfs_fd_t *glfd, long location)
+{
+	return glfs_lseek (glfd, location, SEEK_CUR);
+}
+
+long
+glfs_java_seek_end (glfs_fd_t *glfd, long location)
+{
+	return glfs_lseek (glfd, location, SEEK_END);
 }
 
 long

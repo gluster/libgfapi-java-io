@@ -29,18 +29,23 @@ public class GlusterInputStream extends InputStream{
 
 	    public boolean seek(int location){
 	    	/* need to error if out of bounds.  not sure how its handled lower */
-	    	glfs_javaJNI.glfs_java_seek(fd, location);
+	    	glfs_javaJNI.glfs_java_seek_set(fd, location);
 	    
 	    	return true;
+	    }
+	    
+	    public long offset(){
+	    	return glfs_javaJNI.glfs_java_seek_set(fd, 0);
 	    }
 	    
 	    public int read(byte [] buf, int size) {
 	        return glfs_javaJNI.glfs_java_read(fd, buf, size);
 	    }
 
-	    public int pread(byte [] buf, int size, int offset) {
-	        return glfs_javaJNI.glfs_java_pread(fd, buf, size, offset);
+	    public int read(byte b[], int off, int len) throws IOException {
+	    	  return glfs_javaJNI.glfs_java_pread(fd, b, len, off);
 	    }
+	    
 
 	    public int read() {
 	        byte[] buf = new byte[1];
