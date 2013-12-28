@@ -17,6 +17,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+unsigned long glfs_java_volume_size(glfs_t *glfs,  const char *path);
+long glfs_java_volume_free(glfs_t *glfs,  const char *path);
 char* glfs_java_getxattr(glfs_t *glfs, const char *path, const char *name);
 int glfs_java_chown(glfs_t *glfs, const char *path, unsigned int uid, unsigned int gid);
 int glfs_java_chmod(glfs_t *glfs, const char *path, unsigned long mode);

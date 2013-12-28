@@ -223,6 +223,28 @@ glfs_java_file_createNewFile (glfs_t *glfs, const char *path)
 	return (ret == 0);
 }
 
+unsigned long
+glfs_java_volume_size(glfs_t *glfs,  const char *path){
+
+	struct statvfs statfs = glfs_statvfs(glfs,path);
+	return statfs->f_blocks * statfs->f_bsize;
+
+}
+
+long
+glfs_java_volume_free(glfs_t *glfs,  const char *path){
+	
+	struct statvfs statfs = glfs_statvfs(glfs,path);
+	return statfs->f_bfree * statfs->f_bsize;
+
+}
+
+long
+glfs_java_volume_size(glfs_t *glfs,  const char *path){
+
+
+
+}
 
 bool
 glfs_java_file_delete (glfs_t *glfs, const char *path)
