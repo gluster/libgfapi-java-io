@@ -39,11 +39,11 @@ public class GlusterVolume{
 	}
 	
 	public long getFree(){
-		return glfs_javaJNI.glfs_java_volume_free(handle,'/');
+		return glfs_javaJNI.glfs_java_volume_free(handle,"/");
 	}
 	
 	public long getSize(){
-		return glfs_javaJNI.glfs_java_volume_size(handle,'/');
+		return glfs_javaJNI.glfs_java_volume_size(handle,"/");
 	}
 	
 }
