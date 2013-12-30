@@ -8,6 +8,7 @@ rm -rf target
 # ld -shared glfs-java.o glfs_java_wrap.o -lgfapi -o libgfapi.so
 # rm glfs-java.o glfs_java_wrap.o
 ./configure ; make
+mkdir -p ./src/main/resources 
 cp -f ./src/.libs/libgfapi-java-io.so  ./src/main/resources
 # cp -f libgfapi.so  ./src/main/resources
 
