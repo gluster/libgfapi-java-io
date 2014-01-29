@@ -217,7 +217,7 @@ public class GlusterFile {
 	}
 	
 	public void chown(long uid, long gid){
-		 glfs_javaJNI.chown(handle,path,uid,gid);
+		 glfs_javaJNI.glfs_java_chown(handle,path,uid,gid);
 	}
 	
 	public long getGid() {
