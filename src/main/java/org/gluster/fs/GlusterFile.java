@@ -206,6 +206,20 @@ public class GlusterFile {
 		return  glfs_javaJNI.glfs_java_getuid(handle,path);
 	}
 
+	public void setUid(long uid){
+		long gid = getUid();
+		chown(uid,gid);		
+	}
+	
+	public void setGid(long gid){
+		long uid = getUid();
+		chown(uid,gid);
+	}
+	
+	public void chown(long uid, long gid){
+		 glfs_javaJNI.chown(handle,path,uid,gid);
+	}
+	
 	public long getGid() {
 		return  glfs_javaJNI.glfs_java_getgid(handle,path);
 	}
