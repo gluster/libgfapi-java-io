@@ -39,11 +39,24 @@ public class GlusterInputStream extends InputStream{
 	    }
 	    
 	    public int read(byte [] buf, int size) {
-	        return glfs_javaJNI.glfs_java_read(fd, buf, size);
+	        int read = glfs_javaJNI.glfs_java_read(fd, buf, size);
+	        
+	        if(read<1) return -1;
+	        
+	        return read;
 	    }
-
+	    
 	    public int read(byte b[], int off, int len) throws IOException {
-	    	  return glfs_javaJNI.glfs_java_pread(fd, b, len, off);
+	    	  if(off>0 || len < b.length){
+	    		  byte[] newBuffer = new byte[len-off];
+	    		  int read = read(newBuffer, len);
+	    		  int start = off;
+	    		  for(int j=0;j<read;j++){
+	    			  b[start++] = newBuffer[j];
+	    		  }
+	    		  
+	    	  }
+	    	  return read(b,len);
 	    }
 	    
 

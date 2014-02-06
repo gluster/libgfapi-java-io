@@ -22,8 +22,13 @@ public class GlusterOutputStream extends OutputStream{
 	    protected GlusterOutputStream(String path, long handle) throws IOException {
 	        fd = glfs_javaJNI.glfs_java_open_write(handle, path);
 	        if (fd == 0) {
-	            throw new IOException();
-	        }
+	        	glfs_javaJNI.glfs_java_file_createNewFile(handle, path);
+	       
+	        	fd = glfs_javaJNI.glfs_java_open_write(handle, path);
+	        	if (fd == 0) 
+	        		throw new IOException("Error opening io stream.");
+	        	}
+	        
 	    }
 
 	    public void write(byte [] buf) {
