@@ -302,7 +302,7 @@ glfs_java_close (glfs_fd_t *glfd)
 bool
 glfs_java_file_renameTo (glfs_t *glfs, const char *src, const char *dst)
 {
-	return glfs_rename (glfs, src, dst);
+	return glfs_rename (glfs, src, dst)==0;
 }
 
 char**

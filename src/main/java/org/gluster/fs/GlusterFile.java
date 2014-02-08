@@ -55,7 +55,14 @@ public class GlusterFile {
 		return fullPath.substring(index + 1);
 	}
 	
+	public String pathOnly() {
+		int index = path.lastIndexOf(GlusterClient.PATH_SEPARATOR);
+		if(index<1) return Character.toString(GlusterClient.PATH_SEPARATOR);
+		return path.substring(0,index + 1);
+	}
+	
 	public String getName() {
+	
 		return getName(this.path);
 	}
 
@@ -241,7 +248,9 @@ public class GlusterFile {
 	}
 	
 	public boolean renameTo(String dstpath) {
-		return glfs_javaJNI.glfs_java_file_renameTo(handle, path, dstpath);
+		String pathBase = pathOnly();
+		return glfs_javaJNI.glfs_java_file_renameTo(handle, path, pathBase + dstpath);
+		
 	}
 
 	public long length() {

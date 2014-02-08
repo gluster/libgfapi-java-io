@@ -18,6 +18,7 @@ import glusterfsio.glfs_javaJNI;
 
 public class GlusterInputStream extends InputStream{
 	    private long fd;
+	    boolean closing = false;
 	    
 	    /* user should never directly instantiate */
 	    protected GlusterInputStream(String file, long handle) throws IOException {
@@ -69,14 +70,16 @@ public class GlusterInputStream extends InputStream{
 	    }
 
 	    public void close() {
-	        glfs_javaJNI.glfs_java_close(fd);
-	        fd = 0;
+	    	try{
+	    		if (fd != 0 && !closing) {
+	    			closing=true;
+	    			glfs_javaJNI.glfs_java_close(fd);
+	    			fd = 0;
+		        }
+	    	}catch(Exception ex){}
 	    }
 
 	    protected void finalize() {
-	        if (fd != 0) {
-	            glfs_javaJNI.glfs_java_close(fd);
-	            fd = 0;
-	        }
+	       
 	    }
 }
