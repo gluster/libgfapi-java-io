@@ -168,19 +168,19 @@ glfs_java_file_isFile (glfs_t *glfs, const char *path)
 
 
 long
-glfs_java_seek_set (glfs_fd_t *glfd, long location)
+glfs_java_seek_set (glfs_fd_t *glfd, off_t location)
 {
 	return glfs_lseek (glfd, location, SEEK_SET);
 }
 
 long
-glfs_java_seek_current (glfs_fd_t *glfd, long location)
+glfs_java_seek_current (glfs_fd_t *glfd, off_t location)
 {
 	return glfs_lseek (glfd, location, SEEK_CUR);
 }
 
 long
-glfs_java_seek_end (glfs_fd_t *glfd, long location)
+glfs_java_seek_end (glfs_fd_t *glfd, off_t location)
 {
 	return glfs_lseek (glfd, location, SEEK_END);
 }
@@ -302,7 +302,7 @@ glfs_java_close (glfs_fd_t *glfd)
 bool
 glfs_java_file_renameTo (glfs_t *glfs, const char *src, const char *dst)
 {
-	return glfs_rename (glfs, src, dst);
+	return glfs_rename (glfs, src, dst)==0;
 }
 
 char**

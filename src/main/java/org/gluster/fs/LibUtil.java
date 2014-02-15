@@ -20,7 +20,13 @@ import java.io.InputStream;
 
 public class LibUtil {
 	
+	public static String PATH_SEP = Character.toString(File.separatorChar);
 	public static File copyFromJar(String path, File dst) throws IOException{
+		
+		if(!path.startsWith(PATH_SEP)) {
+			path = PATH_SEP + path;
+		}
+		
 		InputStream stream = LibUtil.class.getResourceAsStream(path);
 	    if (stream == null) {
 	        throw new IOException(path + " not found in jar.");

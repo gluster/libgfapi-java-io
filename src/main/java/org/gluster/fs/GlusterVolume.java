@@ -24,6 +24,9 @@ public class GlusterVolume{
 	}
 
 	public GlusterFile open(String path){
+		
+		if(path==null) return null;
+		
 		return new GlusterFile(path,handle);
 		
 	}

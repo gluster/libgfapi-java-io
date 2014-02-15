@@ -30,7 +30,7 @@ public class GlusterFile {
 		this.handle = handle;
 		/* all paths should not have trailing slash.  tolerate + strip it off */
 		
-		if(path.charAt(path.length()-1)==GlusterClient.PATH_SEPARATOR){
+		if(path.length()>1 && path.charAt(path.length()-1)==GlusterClient.PATH_SEPARATOR){
 			this.path = path.substring(0,path.length()-1);
 		}else{
 			this.path = path;
@@ -55,7 +55,14 @@ public class GlusterFile {
 		return fullPath.substring(index + 1);
 	}
 	
+	public String pathOnly() {
+		int index = path.lastIndexOf(GlusterClient.PATH_SEPARATOR);
+		if(index<1) return Character.toString(GlusterClient.PATH_SEPARATOR);
+		return path.substring(0,index + 1);
+	}
+	
 	public String getName() {
+	
 		return getName(this.path);
 	}
 
@@ -124,6 +131,10 @@ public class GlusterFile {
 		return new GlusterInputStream(this.path, this.handle);
 	}
 
+	public String fullPath(String childName){
+		return this.path + GlusterClient.PATH_SEPARATOR + childName;
+	}
+	
 	public GlusterFile[] listFiles() {
 		String[] ss = list();
 		if (ss == null)
@@ -131,7 +142,7 @@ public class GlusterFile {
 		int n = ss.length;
 		GlusterFile[] fs = new GlusterFile[n];
 		for (int i = 0; i < n; i++) {
-			fs[i] = open(ss[i]);
+			fs[i] = open(fullPath(ss[i]));
 		}
 		return fs;
 	}
@@ -141,8 +152,8 @@ public class GlusterFile {
         if (ss == null) return null;
         ArrayList<GlusterFile> files = new ArrayList<GlusterFile>();
         for (String s : ss)
-            if ((filter == null) || filter.accept(new File(s),s))
-                files.add(open(s));
+            if ((filter == null) || filter.accept(new File(this.path),s))
+                files.add(open(fullPath(s)));
         return files.toArray(new GlusterFile[files.size()]);
     }
 	
@@ -168,7 +179,7 @@ public class GlusterFile {
         }
         ArrayList v = new ArrayList();
         for (int i = 0 ; i < names.length ; i++) {
-            if (filter.accept(new File(names[i]),names[i])) {
+            if (filter.accept(new File(this.path),names[i])) {
                 v.add(getName(names[i]));
             }
         }
@@ -241,7 +252,16 @@ public class GlusterFile {
 	}
 	
 	public boolean renameTo(String dstpath) {
-		return glfs_javaJNI.glfs_java_file_renameTo(handle, path, dstpath);
+		
+		if(dstpath.charAt(0)==GlusterClient.PATH_SEPARATOR){
+			
+			//System.out.println("================ 2Gluster native: " + path + " :::::::: " +  dstpath);
+			return glfs_javaJNI.glfs_java_file_renameTo(handle, path, dstpath);
+		}
+		String pathBase = pathOnly();
+		//System.out.println("================ 2Gluster native: " + path + "," + pathBase + dstpath);
+		return glfs_javaJNI.glfs_java_file_renameTo(handle, path, pathBase + dstpath);
+		
 	}
 
 	public long length() {
@@ -273,9 +293,6 @@ public class GlusterFile {
 	}
 
 	public boolean renameTo(GlusterFile dst) {
-		if (dst.handle != handle)
-			return false;
-
-		return glfs_javaJNI.glfs_java_file_renameTo(handle, path, dst.path);
+		return renameTo(dst.path);
 	}
 }
