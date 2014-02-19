@@ -33,6 +33,7 @@ public class GlusterOutputStream extends OutputStream{
 	        		throw new IOException("Error opening io stream.");
 	        	}
 	        buf = new byte[BUFFER_SIZE];
+
 	        count = 0;
 	    }
 
@@ -63,6 +64,29 @@ public class GlusterOutputStream extends OutputStream{
 	        System.arraycopy(b, off, buf, count, len);
 	        count += len;
 	    }
+=======
+	    }
+
+	    private void flushBuffer() throws IOException {
+	        if (count >= 0) {
+	        	glfs_javaJNI.glfs_java_write (fd, buf, count);
+	            count = 0;
+	        }
+	    }
+	    /*
+	    public synchronized void write(byte b[], int off, int len) throws IOException {
+	        if (len >= buf.length) {
+	            flushBuffer();
+	            glfs_javaJNI.glfs_java_write (fd, b, buf.length);
+	            return;
+	        }
+	        if (len > buf.length - count) {
+	            flushBuffer();
+	        }
+	        System.arraycopy(b, off, buf, count, len);
+	        count += len;
+	    }
+>>>>>>> de1544a6571b57f558a7490f3bc1da5b67a096d8
 	    */
 	    
 	    public synchronized void write(byte b[], int off, int len) throws IOException {

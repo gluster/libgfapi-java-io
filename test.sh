@@ -5,5 +5,5 @@
 #
 rm -rf target/
 export GLUSTER_JAVA_LIB=`pwd`/src/main/resources/libgfapi-java-io.so
-mvn package -Dmaven.surefire.debug 
-# mvn package
+# mvn package -Dmaven.surefire.debug 
+mvn package

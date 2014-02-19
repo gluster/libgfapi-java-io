@@ -14,5 +14,6 @@ cp -f ./src/.libs/libgfapi-java-io.so  ./src/main/resources
 
 # copy the shared library into the resources directory so maven includes it in the jar
 export GLUSTER_JAVA_LIB=`pwd`/src/main/resources/libgfapi-java-io.so
-mvn package
+mvn package -DskipTests=true
 # mvn package -Dmaven.surefire.debug
+# cp target/libgfapi-java-io-1.0-SNAPSHOT.jar /opt/hadoop/share/hadoop/common/lib/

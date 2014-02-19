@@ -130,12 +130,10 @@ public class glfs_java {
   }
 
   public static int glfs_java_seek_current(long glfd, long location) {
-    return glfs_javaJNI.glfs_java_seek_current(glfd, location);
+    return glfs_javaJNI.glfs_java_seek_set(glfd, location);
   }
 
-  public static int glfs_java_seek_end(long glfd, int location) {
-    return glfs_javaJNI.glfs_java_seek_end(glfd, location);
-  }
+
 
   public static int glfs_java_read(long fd,  byte[]  io_data, long size) {
     return glfs_javaJNI.glfs_java_read(fd, io_data, size);

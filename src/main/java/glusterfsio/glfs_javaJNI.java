@@ -40,6 +40,7 @@ public class glfs_javaJNI {
   public final static native long glfs_java_open_write(long jarg1, String jarg2);
   public final static native int glfs_java_seek_set(long jarg1, long jarg2);
   public final static native int glfs_java_seek_current(long jarg1, long jarg2);
+
   public final static native int glfs_java_seek_end(long jarg1, int jarg2);
   public final static native int glfs_java_read(long jarg1,  byte[]  jarg2, long jarg3);
   public final static native int glfs_java_pread(long jarg1,  byte[]  jarg2, long jarg3, long jarg4);

@@ -131,6 +131,14 @@ public class GlusterFile {
 		return new GlusterInputStream(this.path, this.handle);
 	}
 
+	public GlusterBufferedInputStream bufferedInputStream(){
+	    try {
+            return new GlusterBufferedInputStream(this);
+        } catch (IOException e) {
+            return null;
+        }
+	}
+	
 	public String fullPath(String childName){
 		return this.path + GlusterClient.PATH_SEPARATOR + childName;
 	}
@@ -252,14 +260,10 @@ public class GlusterFile {
 	}
 	
 	public boolean renameTo(String dstpath) {
-		
 		if(dstpath.charAt(0)==GlusterClient.PATH_SEPARATOR){
-			
-			//System.out.println("================ 2Gluster native: " + path + " :::::::: " +  dstpath);
 			return glfs_javaJNI.glfs_java_file_renameTo(handle, path, dstpath);
 		}
 		String pathBase = pathOnly();
-		//System.out.println("================ 2Gluster native: " + path + "," + pathBase + dstpath);
 		return glfs_javaJNI.glfs_java_file_renameTo(handle, path, pathBase + dstpath);
 		
 	}
