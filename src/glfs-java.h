@@ -17,6 +17,19 @@
 #include <stdlib.h>
 #include <string.h>
 
+long glfs_java_volume_size(glfs_t *glfs,  const char *path);
+long glfs_java_volume_free(glfs_t *glfs,  const char *path);
+char* glfs_java_getxattr(glfs_t *glfs, const char *path, const char *name);
+int glfs_java_chown(glfs_t *glfs, const char *path, unsigned int uid, unsigned int gid);
+int glfs_java_chmod(glfs_t *glfs, const char *path, unsigned long mode);
+
+unsigned long glfs_java_getmod(glfs_t *glfs, const char *path);
+unsigned int glfs_java_getuid(glfs_t *glfs, const char *path);
+unsigned int glfs_java_getgid(glfs_t *glfs, const char *path);
+int glfs_java_getblocksize(glfs_t *glfs, const char *path);
+long glfs_java_getmtime(glfs_t *glfs, const char *path);
+long glfs_java_getctime(glfs_t *glfs, const char *path);
+long glfs_java_getatime(glfs_t *glfs, const char *path);
 
 glfs_t *glfs_new (const char *volname);
 int glfs_init (glfs_t *fs);
@@ -39,6 +52,10 @@ char** glfs_java_list_dir (glfs_t *fs, const char *path);
 
 glfs_fd_t *glfs_java_open_read (glfs_t *fs, const char *filename);
 glfs_fd_t *glfs_java_open_write (glfs_t *fs, const char *filename);
+
+long glfs_java_seek_set (glfs_fd_t *glfd, off_t location);
+long glfs_java_seek_current (glfs_fd_t *glfd, off_t location);
+long glfs_java_seek_end (glfs_fd_t *glfd, long location);
 
 long glfs_java_read (glfs_fd_t *fd, void *io_data, size_t size);
 long glfs_java_pread (glfs_fd_t *fd, void *io_data, size_t size, off_t offset);

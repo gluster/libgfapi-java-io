@@ -10,6 +10,114 @@
 
 #include "glfs-java.h"
 
+int glfs_java_chown(glfs_t *glfs, const char *path, unsigned int uid, unsigned int gid){
+	return  glfs_chown (glfs, path,  uid, gid);
+}
+
+int glfs_java_chmod(glfs_t *glfs, const char *path, unsigned long mode){
+	return  glfs_chmod (glfs, path,  mode);
+
+}
+
+unsigned long glfs_java_getmod(glfs_t *glfs, const char *path){
+	
+	struct stat buf;
+	long ret;
+
+	ret = glfs_lstat (glfs, path, &buf);
+
+	if (ret < 0)
+		return -1;
+
+	return buf.st_mode;
+}
+
+unsigned int glfs_java_getuid(glfs_t *glfs, const char *path){
+	
+	struct stat buf;
+	long ret;
+
+	ret = glfs_lstat (glfs, path, &buf);
+
+	if (ret < 0)
+		return -1;
+
+	return buf.st_uid;
+}
+
+unsigned int glfs_java_getgid(glfs_t *glfs, const char *path){
+	
+	struct stat buf;
+	long ret;
+
+	ret = glfs_lstat (glfs, path, &buf);
+
+	if (ret < 0)
+		return -1;
+
+	return buf.st_gid;
+}
+
+int glfs_java_getblocksize(glfs_t *glfs, const char *path){
+	
+	struct stat buf;
+	long ret;
+
+	ret = glfs_lstat (glfs, path, &buf);
+
+	if (ret < 0)
+		return -1;
+
+	return buf.st_blksize;
+}
+
+long glfs_java_getmtime(glfs_t *glfs, const char *path){
+	
+	struct stat buf;
+	long ret;
+
+	ret = glfs_lstat (glfs, path, &buf);
+
+	if (ret < 0)
+		return -1;
+
+	return buf.st_mtime;
+}
+
+long glfs_java_getctime(glfs_t *glfs, const char *path){
+	
+	struct stat buf;
+	long ret;
+
+	ret = glfs_lstat (glfs, path, &buf);
+
+	if (ret < 0)
+		return -1;
+
+	return buf.st_ctime;
+}
+
+long glfs_java_getatime(glfs_t *glfs, const char *path){
+	
+	struct stat buf;
+	long ret;
+
+	ret = glfs_lstat (glfs, path, &buf);
+
+	if (ret < 0)
+		return -1;
+
+	return buf.st_atime;
+}
+char* glfs_java_getxattr(glfs_t *glfs, const char *path, const char *name)
+{
+	int size = 1024;
+	char* buf = malloc(size * sizeof(char));
+	
+	glfs_lgetxattr (glfs, path, name, buf, size);
+	
+	return buf;
+}
 
 long
 glfs_java_file_length (glfs_t *glfs, const char *path)
@@ -60,6 +168,24 @@ glfs_java_file_isFile (glfs_t *glfs, const char *path)
 
 
 long
+glfs_java_seek_set (glfs_fd_t *glfd, off_t location)
+{
+	return glfs_lseek (glfd, location, SEEK_SET);
+}
+
+long
+glfs_java_seek_current (glfs_fd_t *glfd, off_t location)
+{
+	return glfs_lseek (glfd, location, SEEK_CUR);
+}
+
+long
+glfs_java_seek_end (glfs_fd_t *glfd, off_t location)
+{
+	return glfs_lseek (glfd, location, SEEK_END);
+}
+
+long
 glfs_java_read (glfs_fd_t *glfd, void *io_data, size_t size)
 {
 	return glfs_read (glfd, io_data, size, 0);
@@ -97,6 +223,29 @@ glfs_java_file_createNewFile (glfs_t *glfs, const char *path)
 	return (ret == 0);
 }
 
+long
+glfs_java_volume_size(glfs_t *glfs,  const char *path){
+        struct statvfs statvfs;
+	long ret;
+        ret = glfs_statvfs(glfs,path,&statvfs);
+        if (ret < 0) {
+                return -1;
+        }
+	return statvfs.f_blocks * statvfs.f_bsize;
+
+}
+
+long
+glfs_java_volume_free(glfs_t *glfs,  const char *path){
+	struct statvfs statvfs;
+	long ret;
+        if (ret < 0) {
+		return -1;
+	}
+        ret = glfs_statvfs(glfs,path, &statvfs);
+	return statvfs.f_bfree * statvfs.f_bsize;
+
+}
 
 bool
 glfs_java_file_delete (glfs_t *glfs, const char *path)
@@ -153,7 +302,7 @@ glfs_java_close (glfs_fd_t *glfd)
 bool
 glfs_java_file_renameTo (glfs_t *glfs, const char *src, const char *dst)
 {
-	return glfs_rename (glfs, src, dst);
+	return glfs_rename (glfs, src, dst)==0;
 }
 
 char**

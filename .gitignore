@@ -10,6 +10,7 @@ config.log
 config.status
 config.sub
 depcomp
+configure
 install-sh
 java/glfs_java.java
 java/glfs_javaJNI.java
@@ -23,3 +24,8 @@ src/.deps/
 src/.libs/
 src/glfs_java.i
 src/glfs_java_wrap.c
+src/main/java/org/gluster/io
+target/
+.classpath
+.project
+.settings/
