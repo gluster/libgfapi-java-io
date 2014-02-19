@@ -8,7 +8,6 @@ glfs_java.i: glfs-java.h
 glfs_java_wrap.c: glfs_java.i
 	mkdir -p $(srcdir)/main/java/glusterfsio
 	swig -java -o glfs_java_wrap.c -outdir $(srcdir)/main/java/glusterfsio -module glfs_java -package glusterfsio glfs_java.i
-	swig -java -o glfs_java_wrap.c -outdir $(srcdir)/../java -module glfs_java -package glusterfsio glfs_java.i
 
 libgfapi_java_io_la_SOURCES = glfs-java.c glfs_java_wrap.c
 
