@@ -10,6 +10,9 @@
 
 #include "glfs-java.h"
 
+
+
+
 int glfs_java_chown(glfs_t *glfs, const char *path, unsigned int uid, unsigned int gid){
 	return  glfs_chown (glfs, path,  uid, gid);
 }
@@ -186,32 +189,16 @@ glfs_java_seek_end (glfs_fd_t *glfd, off_t location)
 }
 
 long
-glfs_java_read (glfs_fd_t *glfd, void *io_data, size_t size)
+glfs_java_read (glfs_fd_t *glfd, b_array *io_data, size_t size)
 {
 	return glfs_read (glfd, io_data, size, 0);
 }
 
-
 long
-glfs_java_pread (glfs_fd_t *glfd, void *io_data, size_t size, off_t offset)
-{
-	return glfs_pread (glfd, io_data, size, offset, 0);
-}
-
-
-long
-glfs_java_write (glfs_fd_t *glfd, void *io_data, size_t size)
+glfs_java_write (glfs_fd_t *glfd, b_array *io_data, size_t size)
 {
 	return glfs_write (glfd, io_data, size, 0);
 }
-
-
-long
-glfs_java_pwrite (glfs_fd_t *glfd, void *io_data, size_t size, off_t offset)
-{
-	return glfs_pwrite (glfd, io_data, size, offset, 0);
-}
-
 
 bool
 glfs_java_file_createNewFile (glfs_t *glfs, const char *path)

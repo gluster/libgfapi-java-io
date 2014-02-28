@@ -2,6 +2,7 @@ package org.gluster.io.test.junit;
 
 import static org.junit.Assert.assertTrue;
 
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -13,6 +14,10 @@ import java.nio.ByteBuffer;
 import org.gluster.fs.GlusterFile;
 import org.gluster.fs.GlusterInputStream;
 import org.gluster.fs.GlusterOutputStream;
+import org.gluster.fs.IGlusterOutputStream;
+import org.gluster.fs.IGlusterInputStream;
+
+
 import org.junit.Test;
 
 public class TestBasicIo extends TestLibgfapiJava{
@@ -61,11 +66,11 @@ public class TestBasicIo extends TestLibgfapiJava{
             /* libgfapi big file test */
             
             byte[] someValue = "this is a test its only a test.".getBytes();
-            GlusterOutputStream outStream = out.outputStream();
+            IGlusterOutputStream outStream = out.outputStream();
             System.out.println("Starting creation of file through libgfapi");
             
             for(int i=0;i<10000000;i++){
-                outStream.write(someValue);
+                outStream.write(someValue,0,someValue.length);
                 
             }
             outStream.flush();
@@ -73,10 +78,24 @@ public class TestBasicIo extends TestLibgfapiJava{
             
             System.out.println("Finished creation of file through libgfapi in " + (System.currentTimeMillis() - time) + "ms");  
         }
-        time = System.currentTimeMillis();
-        /* gluster mount big file test */
-        InputStream is = new BufferedInputStream(out.bufferedInputStream());
+        
+        File foutFile = new File(GLUSTER_MOUNT + "/test/test1.txt");
+        InputStream is = new BufferedInputStream(new FileInputStream(foutFile));
+        
         int read = 0;
+        System.out.println("Benchmarking fuse start read..");
+        time = System.currentTimeMillis();
+        while(read != -1){
+            read = is.read();
+        }
+        is.close();
+        System.out.println("Finished read of file through fuse in " + (System.currentTimeMillis() - time) + "ms"); 
+        
+        
+        
+        /* gluster mount big file test */
+         is = new BufferedInputStream((InputStream)out.bufferedInputStream());
+        read = 0;
         time = System.currentTimeMillis();
         System.out.println("Start of read file through libgfapi");
         while(read != -1){
@@ -85,17 +104,7 @@ public class TestBasicIo extends TestLibgfapiJava{
         is.close();
         
         System.out.println("Finished read of file through libgfapi in " + (System.currentTimeMillis() - time) + "ms");  
-        File foutFile = new File(GLUSTER_MOUNT + "/test/test1.txt");
-        is = new BufferedInputStream(new FileInputStream(foutFile));
         
-        read = 0;
-        System.out.println("Benchmarking fuse start read..");
-        time = System.currentTimeMillis();
-        while(read != -1){
-            read = is.read();
-        }
-        is.close();
-        System.out.println("Finished read of file through fuse in " + (System.currentTimeMillis() - time) + "ms"); 
         
         
         
@@ -110,12 +119,12 @@ public class TestBasicIo extends TestLibgfapiJava{
         /* libgfapi big file test */
 		
         byte[] someValue = "this is a test its only a test.".getBytes();
-        GlusterOutputStream outStream = out.outputStream();
+        IGlusterOutputStream outStream = out.outputStream();
       
         System.out.println("Starting creation of file through libgfapi");
         long time = System.currentTimeMillis();
         for(int i=0;i<1000000;i++){
-        	outStream.write(someValue);
+        	outStream.write(someValue,0,someValue.length);
         	
         }
         outStream.flush();
@@ -139,7 +148,63 @@ public class TestBasicIo extends TestLibgfapiJava{
         System.out.println("Finished creation of file through FUSE in " + (System.currentTimeMillis() - time) + "ms");
       }
     
-	
+    
+    public void testRead() throws Exception{
+        GlusterFile base = getTestBase();
+        GlusterFile out = new GlusterFile(base,"test1.txt");
+        File fout = new File(GLUSTER_MOUNT + "/test/test1_fuse.txt");
+        
+        if(out.exists())
+            out.delete();
+        if(fout.exists())
+            fout.delete();
+        
+            out.createNewFile();
+            fout.createNewFile();
+            
+            /* libgfapi big file test */
+            
+            byte[] someValue = "abc123".getBytes();
+            System.out.println("Writing these bytes:");
+            for(int i=0;i<someValue.length;i++){
+                System.out.print(someValue[i] + " ");
+            }
+            
+            IGlusterOutputStream outStream = out.outputStream();
+            FileOutputStream fOutStream = new FileOutputStream(fout);
+            System.out.println("\nStarting creation of file through libgfapi\n");
+            
+            //for(int i=0;i<1;i++){
+                outStream.write(someValue,0,someValue.length);
+                fOutStream.write(someValue);
+                
+           // }
+            outStream.flush();
+            outStream.close();
+            
+            fOutStream.flush();
+            fOutStream.close();
+            
+        
+            InputStream gis = new BufferedInputStream((InputStream)out.bufferedInputStream());
+            int read = 0;
+            System.out.println("Gluster File:");
+            while(read != -1){
+                read = gis.read();
+                System.out.format("%d ", read);
+            }
+            gis.close();
+            gis = new FileInputStream(fout);
+            read = 0;
+            System.out.println("\nRegular File:");
+            while(read != -1){
+                read = gis.read();
+                System.out.format("%d ", read);
+            }
+            gis.close();
+            
+      }
+    
 	public void testRename(){
 	
 	     GlusterFile base = getTestBase();

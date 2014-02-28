@@ -6,82 +6,69 @@
   General Public License, version 3 or any later version (LGPLv3 or
   later), or the GNU General Public License, version 2 (GPLv2), in all
   cases as published by the Free Software Foundation.
-*/
-
+ */
 
 package org.gluster.fs;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 
 import glusterfsio.glfs_javaJNI;
 
-public class GlusterInputStream extends InputStream{
-	    private long fd;
-	    boolean closing = false;
-	    
-	    /* user should never directly instantiate */
-	    protected GlusterInputStream(String file, long handle) throws IOException {
-	        fd = glfs_javaJNI.glfs_java_open_read(handle, file);
-	        if (fd == 0) {
-	            throw new IOException();
-	        }
-	    }
+public class GlusterInputStream extends InputStream implements IGlusterInputStream {
+    private long fd;
+    boolean closing = false;
 
-	    public boolean seek(long location){
-	    	/* need to error if out of bounds.  not sure how its handled lower */
-	    	glfs_javaJNI.glfs_java_seek_set(fd, location);
-	    
-	    	return true;
-	    }
-	    
-	    public long offset(){
-	    	return glfs_javaJNI.glfs_java_seek_set(fd, 0);
-	    }
-	    
-	    public int read(byte [] buf, int size) {
-	        int read = glfs_javaJNI.glfs_java_read(fd, buf, size);
-	        
-	        if(read<1) return -1;
-	        
-	        return read;
-	    }
-	    
-	    public int read(byte b[], int off, int len) throws IOException {
-	    	  if(off>0 || len < b.length){
-	    		  byte[] newBuffer = new byte[len-off];
-	    		  int read = read(newBuffer, len);
-	    		  int start = off;
-	    		  for(int j=0;j<read;j++){
-	    			  b[start++] = newBuffer[j];
-	    		  }
-	    		  return read;
-	    		  
-	    	  }
-	    	  return read(b,len);
-	    }
-	    
+    /* user should never directly instantiate */
+    protected GlusterInputStream(String file, long handle) throws IOException {
+        fd = glfs_javaJNI.glfs_java_open_read(handle, file);
+        if (fd == 0) {
+            throw new IOException();
+        }
+    }
 
-	    public int read() {
-	        byte[] buf = new byte[1];
+    public boolean seek(long location){
+        /* need to error if out of bounds. not sure how its handled lower */
+        glfs_javaJNI.glfs_java_seek_set(fd, location);
 
-	        if(glfs_javaJNI.glfs_java_read(fd, buf, 1)==0)
-	            return -1;
+        return true;
+    }
 
-	        return buf[0];
-	    }
+    public long offset(){
+        return glfs_javaJNI.glfs_java_seek_set(fd, 0);
+    }
 
-	    public void close() {
-	    	try{
-	    		if (fd != 0 && !closing) {
-	    			closing=true;
-	    			glfs_javaJNI.glfs_java_close(fd);
-	    			fd = 0;
-		        }
-	    	}catch(Exception ex){}
-	    }
+    public int read(byte[] bytes, int off, int len)  {
+        ByteBuffer buf = ByteBuffer.allocateDirect(bytes.length);
+        read(buf,len);
+        buf.get(bytes, off, len);
+       return len;
+    }
 
-	    protected void finalize() {
-	       
-	    }
+    public int read(ByteBuffer buf, int size){
+        return glfs_javaJNI.glfs_java_read(fd, buf, size);
+
+    }
+
+    public int read(){
+        ByteBuffer buf = ByteBuffer.allocateDirect(1);
+        if (read(buf,1) == 0)
+            return -1;
+
+        return buf.get();
+    }
+
+    public void close() throws IOException{
+            if (fd != 0 && !closing) {
+                closing = true;
+                glfs_javaJNI.glfs_java_close(fd);
+                fd = 0;
+            }
+     
+    }
+
+    protected void finalize(){
+
+    }
 }

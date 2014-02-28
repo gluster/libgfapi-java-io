@@ -17,6 +17,12 @@ EOF
 
 if [ $mod = glfs_java ]; then
     cat >> $out <<EOF
+    
+/* direct buffering additions */
+%include "buffers.i" 
+
+%apply void* BUFF   {b_array *}
+    
 
 /* This allows a C function to return a char ** as a Java String array */
 %typemap(out) char** {
@@ -57,12 +63,17 @@ if [ $mod = glfs_java ]; then
 %typemap(jtype) signed char[ANY], signed char[] %{ byte[] %}
 %typemap(jstype) signed char[ANY], signed char[] %{ byte[] %}
 
+/* replaced with native/direct buffer provided by buffer.i*/
+/*
 %typemap(in) void *
 %{ \$1 = (void *) (*jenv)->GetByteArrayElements (jenv, \$input, 0);
    if (!\$1) return \$null; %}
 
 %typemap(argout) void *, signed char[ANY], signed char[]
 %{ (*jenv)->ReleaseByteArrayElements (jenv, \$input, arg\$argnum, 0); %}
+*/
+
+
 
 //%typemap(argout) signed char[ANY], signed char[] %{ %}
 //%typemap(out) signed char[ANY], signed char[] %{ %}

@@ -123,17 +123,17 @@ public class GlusterFile {
 		return (f != null && f.isDirectory());
 	}
 
-	public GlusterOutputStream outputStream() throws IOException {
+	public IGlusterOutputStream outputStream() throws IOException {
 		return new GlusterOutputStream(this.path, this.handle);
 	}
 
-	public GlusterInputStream inputStream() throws IOException {
+	public IGlusterInputStream inputStream() throws IOException {
 		return new GlusterInputStream(this.path, this.handle);
 	}
 
-	public GlusterBufferedInputStream bufferedInputStream(){
+	public IGlusterInputStream bufferedInputStream(){
 	    try {
-            return new GlusterBufferedInputStream(this);
+            return new GlusterDirectBufferInputStream(this);
         } catch (IOException e) {
             return null;
         }

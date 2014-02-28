@@ -17,6 +17,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef void b_array;
+
 long glfs_java_volume_size(glfs_t *glfs,  const char *path);
 long glfs_java_volume_free(glfs_t *glfs,  const char *path);
 char* glfs_java_getxattr(glfs_t *glfs, const char *path, const char *name);
@@ -57,10 +59,10 @@ long glfs_java_seek_set (glfs_fd_t *glfd, off_t location);
 long glfs_java_seek_current (glfs_fd_t *glfd, off_t location);
 long glfs_java_seek_end (glfs_fd_t *glfd, long location);
 
-long glfs_java_read (glfs_fd_t *fd, void *io_data, size_t size);
-long glfs_java_pread (glfs_fd_t *fd, void *io_data, size_t size, off_t offset);
-long glfs_java_write (glfs_fd_t *fd, void *io_data, size_t size);
-long glfs_java_pwrite (glfs_fd_t *fd, void *io_data, size_t size, off_t offset);
+//long glfs_java_bbread (glfs_fd_t *glfd, b_array *io_data, size_t size);
+long glfs_java_read (glfs_fd_t *fd, b_array *io_data, size_t size);
+long glfs_java_write (glfs_fd_t *fd, b_array *io_data, size_t size);
+
 
 
 int glfs_java_close (glfs_fd_t *fd);

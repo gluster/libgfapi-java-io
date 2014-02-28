@@ -19,14 +19,15 @@ public class TestLibgfapiJava {
 	  }
 	  
 	@Before
-	  public void init() {
-		 getTestBase().mkdirs();
+	  public void init() throws Exception{
+	    getTestBase().delete(true);
+	    getTestBase().mkdirs();
 	  }
 	
 	  
 	  @After
 	  public void tearDown() throws Exception {
-		 getTestBase().delete(true);
+		// getTestBase().delete(true);
 	  }
 
 	  
