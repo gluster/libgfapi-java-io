@@ -52,9 +52,15 @@ public class TestBasicIo extends TestLibgfapiJava{
 		out.chmod(mode);
 		System.out.println("new mode" + Long.toString(out.getMod(),8));
 	}
-	
-	
 	@Test
+	public void testConsistent() throws Exception{
+	    GlusterFile base = getTestBase();
+	    GlusterFile out = new GlusterFile(base,"a");
+        out.createNewFile();
+        assertTrue(out.exists());
+	}
+	
+	
     public void testLargRead() throws Exception{
         GlusterFile base = getTestBase();
         GlusterFile out = new GlusterFile(base,"test1.txt");
