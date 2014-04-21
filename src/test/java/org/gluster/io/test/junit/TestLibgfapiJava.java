@@ -15,7 +15,7 @@ public class TestLibgfapiJava {
 	 public static void setUp() throws Exception {
 		GlusterClient cl = new GlusterClient();
 		vol = cl.connect(System.getProperty("GLUSTER_TEST_VOLUME","gv0"));
-		vol.setLogging("/dev/stdout", 7);
+		//vol.setLogging("/dev/stdout", 7);
 	  }
 	  
 	@Before

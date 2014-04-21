@@ -35,6 +35,9 @@ long glfs_java_getatime(glfs_t *glfs, const char *path);
 
 glfs_t *glfs_new (const char *volname);
 int glfs_init (glfs_t *fs);
+int glfs_init_wait(glfs_t *fs);
+int glfs_init_async(glfs_t *fs);
+
 int glfs_fini (glfs_t *fs);
 int glfs_set_logging (glfs_t *fs, const char *logfile, int loglevel);
 int glfs_set_volfile_server (glfs_t *fs, const char *transport,

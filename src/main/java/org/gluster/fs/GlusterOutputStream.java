@@ -67,9 +67,11 @@ public class GlusterOutputStream extends OutputStream implements IGlusterOutputS
                 flush();
             } catch (IOException e) {
 
+            }finally{
+                glfs_javaJNI.glfs_java_close(fd);
+                fd = 0;                
             }
-            glfs_javaJNI.glfs_java_close(fd);
-            fd = 0;
+
         }
 
     }

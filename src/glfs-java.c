@@ -11,6 +11,32 @@
 #include "glfs-java.h"
 
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <stdlib.h>
+
+int debugLog(int error, const char *path, char* text){
+      FILE *fp;
+      
+   
+      /* open the file */
+      fp = fopen("/tmp/libgfapi-java-io-debug.log", "a");
+      if (fp == NULL) {
+         printf("I couldn't open results.dat for appending.\n");
+         exit(0);
+      }
+   
+      /* write to the file */
+      fprintf(fp, "%d : %s on %s in pid=%d\n", error, text, path, getpid());
+   
+      /* close the file */
+      fclose(fp);
+   
+      int flag = 1;
+      while (flag);
+      return 0;
+}
 
 
 int glfs_java_chown(glfs_t *glfs, const char *path, unsigned int uid, unsigned int gid){
@@ -142,8 +168,12 @@ glfs_java_file_exists (glfs_t *glfs, const char *path)
 {
 	struct stat buf;
 	int ret;
+	glfs_t *fs;
+	
+	fs = glfs;
 
-	ret = glfs_lstat (glfs, path, &buf);
+	ret = glfs_lstat (fs, path, &buf);
+	//if(ret!=0 && errno != ENOENT) debugLog( ret, path, strerror (errno)    );
 	return (ret == 0);
 }
 

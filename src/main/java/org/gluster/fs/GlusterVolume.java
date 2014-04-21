@@ -11,31 +11,40 @@
 
 package org.gluster.fs;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import glusterfsio.glfs_javaJNI;
 
 public class GlusterVolume{
 	
+
+
 	private String name;
 	private long handle;
 	
 	public GlusterVolume(String name, long handle){
 		this.name = name;
 		this.handle = handle;
+		
 	}
 
+
+	
 	public GlusterFile open(String path){
 		
 		if(path==null) return null;
 		
 		return new GlusterFile(path,handle);
 		
+		
 	}
 	
-    public int setLogging(String LogFile, int LogLevel) {
-    	int ret;
-    	ret = glfs_javaJNI.glfs_set_logging(handle, LogFile, LogLevel);
-    	return ret;
-    }
+
 
 	public String getName() {
 		return this.name;
@@ -49,4 +58,12 @@ public class GlusterVolume{
 		return glfs_javaJNI.glfs_java_volume_size(handle,"/");
 	}
 	
+	public void close(){
+	    glfs_javaJNI.glfs_fini(this.handle);
+	}
+	
+	public void finalize(){
+	        close();
+	}
+	   
 }

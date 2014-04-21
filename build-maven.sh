@@ -10,3 +10,4 @@ export GLUSTER_JAVA_LIB=`pwd`/src/main/resources/libgfapi-java-io.so
 mvn package -DskipTests=true
 # this is to start maven in debugger mode
 # mvn package -Dmaven.surefire.debug
+cp target/libg*.jar /opt/hadoop/share/hadoop/common/lib/
