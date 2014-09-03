@@ -39,16 +39,20 @@ public class GlusterInputStream extends InputStream implements IGlusterInputStre
         return glfs_javaJNI.glfs_java_seek_set(fd, 0);
     }
 
-    public int read(byte[] bytes, int off, int len)  {
-        ByteBuffer buf = ByteBuffer.allocateDirect(bytes.length);
-        read(buf,len);
-        buf.get(bytes, off, len);
-       return len;
-    }
 
-    public int read(ByteBuffer buf, int size){
-        return glfs_javaJNI.glfs_java_read(fd, buf, size);
-
+    public int read(byte[] out, int offset, int length) {
+        if (length == 0) {
+            return 0;
+        } else {
+            ByteBuffer buffer = ByteBuffer.allocateDirect(out.length);
+            int read = read(buffer, out.length);
+            if (read <= 0) {
+                read = -1;
+            } else {
+                buffer.get(out, offset, Math.min(length, read));
+            }
+            return read;
+        }
     }
 
     public int read(){
