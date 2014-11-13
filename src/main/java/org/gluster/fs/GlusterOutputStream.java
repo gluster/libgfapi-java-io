@@ -14,19 +14,19 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
-import glusterfsio.glfs_javaJNI;
+import glusterfsio.glfs_java;
 
 public class GlusterOutputStream extends OutputStream implements IGlusterOutputStream {
-    private long fd;
+    protected long fd;
     protected static final int BUFFER_SIZE = 1024 * 512;
     protected ByteBuffer buf;
 
     protected GlusterOutputStream(String path, long handle) throws IOException {
-        fd = glfs_javaJNI.glfs_java_open_write(handle, path);
+        fd = glfs_java.glfs_java_open_write(handle, path);
         if (fd == 0) {
-            glfs_javaJNI.glfs_java_file_createNewFile(handle, path);
+            glfs_java.glfs_java_file_createNewFile(handle, path);
 
-            fd = glfs_javaJNI.glfs_java_open_write(handle, path);
+            fd = glfs_java.glfs_java_open_write(handle, path);
             if (fd == 0)
                 throw new IOException("Error opening io stream.");
         }
@@ -39,11 +39,11 @@ public class GlusterOutputStream extends OutputStream implements IGlusterOutputS
             flush();
         } catch (IOException e) {
         }
-        glfs_javaJNI.glfs_java_seek_set(fd, position);
+        glfs_java.glfs_java_seek_set(fd, position);
     }
 
     public void flush() throws IOException{
-        glfs_javaJNI.glfs_java_write(fd, buf, buf.position());
+        glfs_java.glfs_java_write(fd, buf, buf.position());
         buf.rewind();
     }
 
@@ -52,7 +52,7 @@ public class GlusterOutputStream extends OutputStream implements IGlusterOutputS
             write(b[i]);
         }
     }
-    
+
     public synchronized void write(int b) throws IOException{
         if (buf.position()+1 >= buf.capacity()) {
             flush();
@@ -60,7 +60,7 @@ public class GlusterOutputStream extends OutputStream implements IGlusterOutputS
         buf.put((byte) b);
     }
 
-    
+
     public void close(){
         if (fd != 0) {
             try {
@@ -68,8 +68,9 @@ public class GlusterOutputStream extends OutputStream implements IGlusterOutputS
             } catch (IOException e) {
 
             }finally{
-                glfs_javaJNI.glfs_java_close(fd);
-                fd = 0;                
+                LibUtil.trySilentlyReleaseDirectByteBuffer(buf);
+                glfs_java.glfs_java_close(fd);
+                fd = 0;
             }
 
         }

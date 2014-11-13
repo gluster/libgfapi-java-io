@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
-import glusterfsio.glfs_javaJNI;
+import glusterfsio.glfs_java;
 
 public class GlusterInputStream extends InputStream implements IGlusterInputStream {
     private long fd;
@@ -22,7 +22,7 @@ public class GlusterInputStream extends InputStream implements IGlusterInputStre
 
     /* user should never directly instantiate */
     protected GlusterInputStream(String file, long handle) throws IOException {
-        fd = glfs_javaJNI.glfs_java_open_read(handle, file);
+        fd = glfs_java.glfs_java_open_read(handle, file);
         if (fd == 0) {
             throw new IOException();
         }
@@ -30,18 +30,18 @@ public class GlusterInputStream extends InputStream implements IGlusterInputStre
 
     public boolean seek(long location){
         /* need to error if out of bounds. not sure how its handled lower */
-        glfs_javaJNI.glfs_java_seek_set(fd, location);
+        glfs_java.glfs_java_seek_set(fd, location);
 
         return true;
     }
 
     public long offset(){
-        return glfs_javaJNI.glfs_java_seek_set(fd, 0);
+        return glfs_java.glfs_java_seek_set(fd, 0);
     }
 
-    public int read(ByteBuffer buf, int size){ 
-      return glfs_javaJNI.glfs_java_read(fd, buf, size); 
-    }   
+    public int read(ByteBuffer buf, int size){
+      return glfs_java.glfs_java_read(fd, buf, size);
+    }
 
     public int read(byte[] out, int offset, int length) {
         if (length == 0) {
@@ -54,6 +54,7 @@ public class GlusterInputStream extends InputStream implements IGlusterInputStre
             } else {
                 buffer.get(out, offset, Math.min(length, read));
             }
+            LibUtil.trySilentlyReleaseDirectByteBuffer(buffer);
             return read;
         }
     }
@@ -69,10 +70,10 @@ public class GlusterInputStream extends InputStream implements IGlusterInputStre
     public void close() throws IOException{
             if (fd != 0 && !closing) {
                 closing = true;
-                glfs_javaJNI.glfs_java_close(fd);
+                glfs_java.glfs_java_close(fd);
                 fd = 0;
             }
-     
+
     }
 
     protected void finalize(){

@@ -20,20 +20,20 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
-import glusterfsio.glfs_javaJNI;
+import glusterfsio.glfs_java;
 
 public class GlusterClient {
-	
+
 	private static String LIB_NAME="libgfapi-java-io";
 	private static String LIB_FILE=GlusterClient.LIB_NAME + ".so";
 	private static File loadedLib = null;
 	private static int CONNECT_WAIT=1*1000;
-	
-	
+
+
 	public static char PATH_SEPARATOR = File.separatorChar;
 
 	private long fs;
-	
+
     static {
     	try{
     		/* try and load the system library */
@@ -48,11 +48,11 @@ public class GlusterClient {
 		    	try {
 		    		File tempFile = new File(System.getProperty("java.io.tmpdir"));
 		    		loadedLib = new File(tempFile + File.separator + LIB_FILE);
-		    		
+
 		    		if(!loadedLib.exists())
 		    			LibUtil.copyFromJar(LIB_FILE,tempFile);
 		    		//loadedLib.deleteOnExit();
-		    		
+
 				} catch (IOException e) {
 					throw new RuntimeException("Error loading native library:" + e);
 				}
@@ -60,11 +60,11 @@ public class GlusterClient {
 	    	}
     	}
     }
-    
-    private String server = null; 
-    private int port = -1; 
+
+    private String server = null;
+    private int port = -1;
     private String transport = null;
-    
+
     public GlusterClient(String server, int port, String transport){
     	this.server = server;
     	this.port = port;
@@ -78,10 +78,10 @@ public class GlusterClient {
     public GlusterClient(){
     	this("localhost",0,"tcp");
     }
-    
+
     public int setLogging(String LogFile, int LogLevel, long handle) {
         int ret;
-        ret = glfs_javaJNI.glfs_set_logging(handle, LogFile, LogLevel);
+        ret = glfs_java.glfs_set_logging(handle, LogFile, LogLevel);
         return ret;
     }
     public String getPid(){
@@ -107,35 +107,35 @@ public class GlusterClient {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-       
+
        return null;
-        
+
     }
 
 	public GlusterVolume connect(String volumeName) throws IOException {
         int ret=1;
-       
-        fs = glfs_javaJNI.glfs_new(volumeName);
+
+        fs = glfs_java.glfs_new(volumeName);
 
         if (fs == 0) {
         	throw new IOException("Error connecting to gluster volume:" + server + ":" + port + "/" + volumeName);
         }
-       
-       
-            ret = glfs_javaJNI.glfs_set_volfile_server(fs, transport, server, port);
-            
+
+
+            ret = glfs_java.glfs_set_volfile_server(fs, transport, server, port);
+
         if (ret == -1) {
-            glfs_javaJNI.glfs_fini(fs);
+            glfs_java.glfs_fini(fs);
             throw new IOException("Error connecting to gluster volume:" + server + ":" + port + "/" + volumeName);
         }
-        
+
         setLogging("/tmp/libgfapi-java-io-" + volumeName + "-" + getPid() + ".log", 7, fs);
-        ret = glfs_javaJNI.glfs_init(fs);
-        
+        ret = glfs_java.glfs_init(fs);
+
         int i=0;
         for(i=0 ;i<15 && !(ret==-1 || ret==0);i++){
-           
-            ret = glfs_javaJNI.glfs_init_wait(fs);
+
+            ret = glfs_java.glfs_init_wait(fs);
             if(ret==1){
                 try{
                 Thread.sleep(GlusterClient.CONNECT_WAIT);
@@ -144,11 +144,11 @@ public class GlusterClient {
                 }
                 }
         }
-        
+
         if (i == 15)  throw new IOException("Error connecting to gluster volume, tried 15 times..:" + volumeName);
-        
+
         if (ret == -1) {
-            glfs_javaJNI.glfs_fini(fs);
+            glfs_java.glfs_fini(fs);
             throw new IOException("Error connecting to gluster volume:" + server + ":" + port + "/" + volumeName);
         }
 
@@ -156,7 +156,7 @@ public class GlusterClient {
     }
 
 
-    
-    
- 
+
+
+
 }

@@ -17,25 +17,24 @@
 #include <stdlib.h>
 
 int debugLog(int error, const char *path, char* text){
-      FILE *fp;
-      
-   
-      /* open the file */
-      fp = fopen("/tmp/libgfapi-java-io-debug.log", "a");
-      if (fp == NULL) {
-         printf("I couldn't open results.dat for appending.\n");
-         exit(0);
-      }
-   
-      /* write to the file */
-      fprintf(fp, "%d : %s on %s in pid=%d\n", error, text, path, getpid());
-   
-      /* close the file */
-      fclose(fp);
-   
-      int flag = 1;
-      while (flag);
-      return 0;
+    FILE *fp;
+
+    /* open the file */
+    fp = fopen("/tmp/libgfapi-java-io-debug.log", "a");
+    if (fp == NULL) {
+        printf("I couldn't open results.dat for appending.\n");
+        exit(0);
+    }
+
+    /* write to the file */
+    fprintf(fp, "%d : %s on %s in pid=%d\n", error, text, path, getpid());
+
+    /* close the file */
+    fclose(fp);
+
+    int flag = 1;
+    while (flag);
+    return 0;
 }
 
 
@@ -49,7 +48,6 @@ int glfs_java_chmod(glfs_t *glfs, const char *path, unsigned long mode){
 }
 
 unsigned long glfs_java_getmod(glfs_t *glfs, const char *path){
-	
 	struct stat buf;
 	long ret;
 
@@ -62,7 +60,7 @@ unsigned long glfs_java_getmod(glfs_t *glfs, const char *path){
 }
 
 unsigned int glfs_java_getuid(glfs_t *glfs, const char *path){
-	
+
 	struct stat buf;
 	long ret;
 
@@ -75,7 +73,7 @@ unsigned int glfs_java_getuid(glfs_t *glfs, const char *path){
 }
 
 unsigned int glfs_java_getgid(glfs_t *glfs, const char *path){
-	
+
 	struct stat buf;
 	long ret;
 
@@ -88,7 +86,7 @@ unsigned int glfs_java_getgid(glfs_t *glfs, const char *path){
 }
 
 int glfs_java_getblocksize(glfs_t *glfs, const char *path){
-	
+
 	struct stat buf;
 	long ret;
 
@@ -101,7 +99,7 @@ int glfs_java_getblocksize(glfs_t *glfs, const char *path){
 }
 
 long glfs_java_getmtime(glfs_t *glfs, const char *path){
-	
+
 	struct stat buf;
 	long ret;
 
@@ -114,7 +112,7 @@ long glfs_java_getmtime(glfs_t *glfs, const char *path){
 }
 
 long glfs_java_getctime(glfs_t *glfs, const char *path){
-	
+
 	struct stat buf;
 	long ret;
 
@@ -127,7 +125,7 @@ long glfs_java_getctime(glfs_t *glfs, const char *path){
 }
 
 long glfs_java_getatime(glfs_t *glfs, const char *path){
-	
+
 	struct stat buf;
 	long ret;
 
@@ -142,13 +140,13 @@ char* glfs_java_getxattr(glfs_t *glfs, const char *path, const char *name)
 {
 	int size = 1024;
 	char* buf = malloc(size * sizeof(char));
-	
+
 	glfs_lgetxattr (glfs, path, name, buf, size);
-	
+
 	return buf;
 }
 
-long
+off_t
 glfs_java_file_length (glfs_t *glfs, const char *path)
 {
 	struct stat buf;
@@ -169,11 +167,10 @@ glfs_java_file_exists (glfs_t *glfs, const char *path)
 	struct stat buf;
 	int ret;
 	glfs_t *fs;
-	
+
 	fs = glfs;
 
 	ret = glfs_lstat (fs, path, &buf);
-	//if(ret!=0 && errno != ENOENT) debugLog( ret, path, strerror (errno)    );
 	return (ret == 0);
 }
 
@@ -240,26 +237,24 @@ glfs_java_file_createNewFile (glfs_t *glfs, const char *path)
 	return (ret == 0);
 }
 
-long
+off_t
 glfs_java_volume_size(glfs_t *glfs,  const char *path){
-        struct statvfs statvfs;
-	long ret;
-        ret = glfs_statvfs(glfs,path,&statvfs);
-        if (ret < 0) {
-                return -1;
-        }
+    struct statvfs statvfs;
+	long ret = glfs_statvfs(glfs,path,&statvfs);
+    if (ret < 0) {
+        return -1;
+    }
 	return statvfs.f_blocks * statvfs.f_bsize;
 
 }
 
-long
+off_t
 glfs_java_volume_free(glfs_t *glfs,  const char *path){
 	struct statvfs statvfs;
-	long ret;
+	long ret = glfs_statvfs(glfs,path, &statvfs);
         if (ret < 0) {
 		return -1;
 	}
-        ret = glfs_statvfs(glfs,path, &statvfs);
 	return statvfs.f_bfree * statvfs.f_bsize;
 
 }
@@ -294,7 +289,6 @@ glfs_java_file_mkdir (glfs_t *glfs, const char *path)
 	return (ret == 0);
 }
 
-
 glfs_fd_t *
 glfs_java_open_read (glfs_t *glfs, const char *path)
 {
@@ -308,13 +302,11 @@ glfs_java_open_write (glfs_t *glfs, const char *path)
 	return glfs_open (glfs, path, O_LARGEFILE|O_WRONLY);
 }
 
-
 int
 glfs_java_close (glfs_fd_t *glfd)
 {
 	return glfs_close (glfd);
 }
-
 
 bool
 glfs_java_file_renameTo (glfs_t *glfs, const char *src, const char *dst)
@@ -325,28 +317,28 @@ glfs_java_file_renameTo (glfs_t *glfs, const char *src, const char *dst)
 char**
 glfs_java_list_dir (glfs_t *fs, const char *path)
 {
-        char** listing = NULL;
-        unsigned int size = 0;
-        glfs_fd_t *fd = NULL;
-        char buf[512];
-        struct dirent *entry = NULL;
+    char** listing = NULL;
+    unsigned int size = 0;
+    glfs_fd_t *fd = NULL;
+    char buf[512];
+    struct dirent *entry = NULL;
 
-        fd = glfs_opendir (fs, path);
-        if (!fd) {
-            return listing;
-        }
-
-        while (glfs_readdir_r (fd, (struct dirent *)buf, &entry), entry) {
-         /* skip over . and .. entries */
-	 if(strcmp(entry->d_name,".")==0 || strcmp(entry->d_name,"..")==0) continue;
-
-         // one extra for a NULL
-	 listing=realloc(listing, sizeof(char *) * (++size+1));
-         listing[size-1]= (char*) malloc((strlen(entry->d_name) + 1) * sizeof(char));
-         strcpy (listing[size-1], entry->d_name);
-         listing[size] = (char*)NULL;
-        }
-
-        glfs_closedir (fd);
+    fd = glfs_opendir (fs, path);
+    if (!fd) {
         return listing;
+    }
+
+    while (glfs_readdir_r (fd, (struct dirent *)buf, &entry), entry) {
+     /* skip over . and .. entries */
+        if(strcmp(entry->d_name,".")==0 || strcmp(entry->d_name,"..")==0) continue;
+
+     // one extra for a NULL
+        listing=realloc(listing, sizeof(char *) * (++size+1));
+        listing[size-1]= (char*) malloc((strlen(entry->d_name) + 1) * sizeof(char));
+        strcpy (listing[size-1], entry->d_name);
+        listing[size] = (char*)NULL;
+    }
+
+    glfs_closedir (fd);
+    return listing;
 }

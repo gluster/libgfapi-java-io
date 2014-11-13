@@ -18,52 +18,52 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import glusterfsio.glfs_javaJNI;
+import glusterfsio.glfs_java;
 
 public class GlusterVolume{
-	
+
 
 
 	private String name;
 	private long handle;
-	
+
 	public GlusterVolume(String name, long handle){
 		this.name = name;
 		this.handle = handle;
-		
+
 	}
 
 
-	
+
 	public GlusterFile open(String path){
-		
+
 		if(path==null) return null;
-		
+
 		return new GlusterFile(path,handle);
-		
-		
+
+
 	}
-	
+
 
 
 	public String getName() {
 		return this.name;
 	}
-	
+
 	public long getFree(){
-		return glfs_javaJNI.glfs_java_volume_free(handle,"/");
+		return glfs_java.glfs_java_volume_free(handle,"/");
 	}
-	
+
 	public long getSize(){
-		return glfs_javaJNI.glfs_java_volume_size(handle,"/");
+		return glfs_java.glfs_java_volume_size(handle,"/");
 	}
-	
+
 	public void close(){
-	    glfs_javaJNI.glfs_fini(this.handle);
+	    glfs_java.glfs_fini(this.handle);
 	}
-	
+
 	public void finalize(){
 	        close();
 	}
-	   
+
 }
