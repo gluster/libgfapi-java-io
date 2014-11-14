@@ -25,35 +25,35 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 public class GlusterDirectBufferInputStream extends InputStream implements IGlusterInputStream{
-    
+
     public static final int MAX_BUFFER = 1024*256;
     private ByteBuffer buf;
     private GlusterInputStream in;
     private long position;
-    
+
     public GlusterDirectBufferInputStream(GlusterInputStream in,int bufferSize) {
         this.buf = ByteBuffer.allocateDirect(bufferSize).order(ByteOrder.nativeOrder());
         this.in = in;
         position=0;
         buf.limit(0);
-        
-    }    
-    
+
+    }
+
     public GlusterDirectBufferInputStream(GlusterFile file) throws IOException {
         this((GlusterInputStream)file.inputStream());
     }
-    
+
     public GlusterDirectBufferInputStream(GlusterInputStream in) {
         this(in,MAX_BUFFER);
     }
-    
+
     private long fill(){
         buf.rewind();
         int end = in.read(buf, buf.capacity());
         buf.limit(end);
         return end;
     }
-    
+
     public int read()  {
         if (!(buf.hasRemaining())) {
             if(fill() <= 0){
@@ -70,15 +70,15 @@ public class GlusterDirectBufferInputStream extends InputStream implements IGlus
                 return -1;
             }
         }
-        
+
         len = Math.min(len, buf.remaining());
         buf.get(bytes, off, len);
         position+=len;
         return len;
     }
-    
+
     public boolean seek(long l){
-        
+
         buf.limit(0);
         position = l;
         in.seek(position);
@@ -89,5 +89,12 @@ public class GlusterDirectBufferInputStream extends InputStream implements IGlus
         return position;
     }
 
+    public void close() throws IOException {
+        LibUtil.trySilentlyReleaseDirectByteBuffer(buf);
+        in.close();
+    }
 
+    protected void finalize() throws IOException {
+        close();
+    }
 }

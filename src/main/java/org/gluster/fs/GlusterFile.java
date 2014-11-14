@@ -18,7 +18,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.util.ArrayList;
 
-import glusterfsio.glfs_javaJNI;
+import glusterfsio.glfs_java;
 
 
 public class GlusterFile {
@@ -29,7 +29,7 @@ public class GlusterFile {
 	protected GlusterFile(String path, long handle) {
 		this.handle = handle;
 		/* all paths should not have trailing slash.  tolerate + strip it off */
-		
+
 		if(path.length()>1 && path.charAt(path.length()-1)==GlusterClient.PATH_SEPARATOR){
 			this.path = path.substring(0,path.length()-1);
 		}else{
@@ -54,31 +54,31 @@ public class GlusterFile {
 		int index = fullPath.lastIndexOf(GlusterClient.PATH_SEPARATOR);
 		return fullPath.substring(index + 1);
 	}
-	
+
 	public String pathOnly() {
 		int index = path.lastIndexOf(GlusterClient.PATH_SEPARATOR);
 		if(index<1) return Character.toString(GlusterClient.PATH_SEPARATOR);
 		return path.substring(0,index + 1);
 	}
-	
+
 	public String getName() {
-	
+
 		return getName(this.path);
 	}
 
 	public String getPath(){
 		return this.path;
 	}
-	
+
     public String getParent() {
         int index = path.lastIndexOf(GlusterClient.PATH_SEPARATOR);
         return path.substring(0, index);
    }
-    
+
     public GlusterFile getAbsoluteFile() {
         return this;
     }
-    
+
     private static String slashify(String path, boolean isDirectory) {
         String p = path;
         if (GlusterClient.PATH_SEPARATOR != '/')
@@ -89,7 +89,7 @@ public class GlusterFile {
             p = p + "/";
         return p;
     }
-    
+
     public URI toURI() {
         try {
         	String sp = slashify(getPath(), isDirectory());
@@ -138,11 +138,11 @@ public class GlusterFile {
             return null;
         }
 	}
-	
+
 	public String fullPath(String childName){
 		return this.path + GlusterClient.PATH_SEPARATOR + childName;
 	}
-	
+
 	public GlusterFile[] listFiles() {
 		String[] ss = list();
 		if (ss == null)
@@ -154,7 +154,7 @@ public class GlusterFile {
 		}
 		return fs;
 	}
-	
+
 	public GlusterFile[] listFiles(FilenameFilter filter) {
         String ss[] = list();
         if (ss == null) return null;
@@ -164,22 +164,22 @@ public class GlusterFile {
                 files.add(open(fullPath(s)));
         return files.toArray(new GlusterFile[files.size()]);
     }
-	
+
 	public String[] list() {
-		
+
 		if(isFile()) return null;
-		
-		String list[] = glfs_javaJNI.glfs_java_list_dir(handle, this.path + GlusterClient.PATH_SEPARATOR);
+
+		String list[] = glfs_java.glfs_java_list_dir(handle, this.path + GlusterClient.PATH_SEPARATOR);
 		/* API returns null for no elements */
 		if(list==null)
 			list = new String[0];
-		
+
 		for(int i=0;i<list.length;i++){
 			list[i] = getName(list[i]);
 		}
 		return list;
 	}
-	
+
 	public String[] list(FilenameFilter filter) {
         String names[] = list();
         if ((names == null) || (filter == null)) {
@@ -193,7 +193,7 @@ public class GlusterFile {
         }
         return (String[])(v.toArray(new String[v.size()]));
     }
-	
+
 	public boolean delete(boolean recursive) throws IOException{
 	    	if(isDirectory() && recursive){
 		    	String files[] = list();
@@ -203,97 +203,97 @@ public class GlusterFile {
 		    }
 	    	return delete();
 	}
-	
+
 	public String toString() {
 		return path;
 	}
-	
-	
+
+
 	public String getXAttr(String attr) {
-		return  glfs_javaJNI.glfs_java_getxattr(handle, path, attr);
+		return  glfs_java.glfs_java_getxattr(handle, path, attr);
 	}
-	
+
 	public boolean chmod(int mode) {
-		return  glfs_javaJNI.glfs_java_chmod(handle,path,mode)==0;
+		return  glfs_java.glfs_java_chmod(handle,path,mode)==0;
 	}
-	
+
 	public long getMod() {
-		return  glfs_javaJNI.glfs_java_getmod(handle,path);
+		return  glfs_java.glfs_java_getmod(handle,path);
 	}
-	
+
 	public long getUid() {
-		return  glfs_javaJNI.glfs_java_getuid(handle,path);
+		return  glfs_java.glfs_java_getuid(handle,path);
 	}
 
 	public void setUid(long uid){
 		long gid = getUid();
-		chown(uid,gid);		
+		chown(uid,gid);
 	}
-	
+
 	public void setGid(long gid){
 		long uid = getUid();
 		chown(uid,gid);
 	}
-	
+
 	public void chown(long uid, long gid){
-		 glfs_javaJNI.glfs_java_chown(handle,path,uid,gid);
+		 glfs_java.glfs_java_chown(handle,path,uid,gid);
 	}
-	
+
 	public long getGid() {
-		return  glfs_javaJNI.glfs_java_getgid(handle,path);
+		return  glfs_java.glfs_java_getgid(handle,path);
 	}
 
 	public long getAtime() {
-		return  glfs_javaJNI.glfs_java_getatime(handle,path);
+		return  glfs_java.glfs_java_getatime(handle,path);
 	}
-	
+
 	public long getMtime() {
-		return  glfs_javaJNI.glfs_java_getmtime(handle,path);
+		return  glfs_java.glfs_java_getmtime(handle,path);
 	}
 
 	public long getCtime() {
-		return  glfs_javaJNI.glfs_java_getctime(handle,path);
+		return  glfs_java.glfs_java_getctime(handle,path);
 	}
-	
+
 	public int getBlockSize() {
-		return  glfs_javaJNI.glfs_java_getblocksize(handle,path);
+		return  glfs_java.glfs_java_getblocksize(handle,path);
 	}
-	
+
 	public boolean renameTo(String dstpath) {
 		if(dstpath.charAt(0)==GlusterClient.PATH_SEPARATOR){
-			return glfs_javaJNI.glfs_java_file_renameTo(handle, path, dstpath);
+			return glfs_java.glfs_java_file_renameTo(handle, path, dstpath);
 		}
 		String pathBase = pathOnly();
-		return glfs_javaJNI.glfs_java_file_renameTo(handle, path, pathBase + dstpath);
-		
+		return glfs_java.glfs_java_file_renameTo(handle, path, pathBase + dstpath);
+
 	}
 
 	public long length() {
-		return glfs_javaJNI.glfs_java_file_length(handle, path);
+		return glfs_java.glfs_java_file_length(handle, path);
 	}
 
 	public boolean exists() {
-		return glfs_javaJNI.glfs_java_file_exists(handle, path);
+		return glfs_java.glfs_java_file_exists(handle, path);
 	}
 
 	public boolean createNewFile() {
-		return glfs_javaJNI.glfs_java_file_createNewFile(handle, path);
+		return glfs_java.glfs_java_file_createNewFile(handle, path);
 	}
 
 	public boolean mkdir() {
-		return glfs_javaJNI.glfs_java_file_mkdir(handle, path);
+		return glfs_java.glfs_java_file_mkdir(handle, path);
 	}
 
 	public boolean isDirectory() {
-		return glfs_javaJNI.glfs_java_file_isDirectory(handle, path);
+		return glfs_java.glfs_java_file_isDirectory(handle, path);
 	}
 
 	public boolean isFile() {
-		return glfs_javaJNI.glfs_java_file_isFile(handle, path);
+		return glfs_java.glfs_java_file_isFile(handle, path);
 	}
-	
+
 	public boolean delete() {
-		return glfs_javaJNI.glfs_java_file_delete(handle, path);
+		return glfs_java.glfs_java_file_delete(handle, path);
 	}
 
 	public boolean renameTo(GlusterFile dst) {
